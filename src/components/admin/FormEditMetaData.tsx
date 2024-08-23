@@ -10,6 +10,7 @@ import React, {
 import { CATEGORIES, STATUS, TAGS } from "@/lib/data";
 import { MetaData } from "../../../types";
 import FormContainer from "../ui/FormContainer";
+import { BiCheck, BiX } from "react-icons/bi";
 
 interface Props {
   metaData: MetaData;
@@ -25,6 +26,7 @@ export default function FormEditMetaData({
   setShowForm,
 }: Props) {
   const [state, setState] = useState(metaData);
+  const [tag, setTag] = useState<string>("");
 
   useEffect(() => {
     setState((curr) => {
@@ -50,6 +52,14 @@ export default function FormEditMetaData({
       }
       return { ...curr };
     });
+  };
+
+  const handleAddTag = () => {
+    if (tag !== "") {
+      setState((curr) => {
+        return { ...curr, tags: curr.tags.push(tag) };
+      });
+    }
   };
 
   const onSubmit = () => {
@@ -149,7 +159,7 @@ export default function FormEditMetaData({
       {/* Tags */}
       <div className="field">
         <span className="field_label">Tags</span>
-        {TAGS.map((item, index) => (
+        {/* {TAGS.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -161,7 +171,27 @@ export default function FormEditMetaData({
             />
             <label htmlFor={"checkbox_" + item.value}>{item.label}</label>
           </div>
-        ))}
+        ))} */}
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Enter New Tag"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            className="field_input"
+          />
+          <button type="button" onClick={handleAddTag}>
+            <BiCheck size={30} />
+          </button>
+          <button type="button">
+            <BiX size={30} />
+          </button>
+        </div>
+        <ul>
+          {state.tags.map((tag, idx) => (
+            <li key={idx}>{tag}</li>
+          ))}
+        </ul>
       </div>
       {/* Status */}
       <div className="field">

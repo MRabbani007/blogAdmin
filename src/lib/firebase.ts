@@ -16,7 +16,10 @@ import {
   doc,
   getDocs,
   getFirestore,
+  limit,
+  orderBy,
   query,
+  serverTimestamp,
   Timestamp,
   updateDoc,
   where,
@@ -107,8 +110,9 @@ export async function deleteFile(pathname: string | null) {
 export async function createDoc(table: string, document: MetaData) {
   try {
     const col = collection(firestore, table);
-    const createdAt = Timestamp.fromDate(new Date());
-    const updatedAt = "";
+    const createdAt = serverTimestamp();
+    //  Timestamp.fromDate(new Date());
+    const updatedAt = serverTimestamp();
 
     const docRef = await addDoc(col, { ...document, createdAt, updatedAt });
 
@@ -135,7 +139,8 @@ export async function updateDocument(document: MetaData) {
       tags,
       banner,
       downloadURL,
-      updatedAt: Timestamp.fromDate(new Date()),
+      updatedAt: serverTimestamp(),
+      // Timestamp.fromDate(new Date()),
     });
   } catch (error) {
     console.log(error);
@@ -152,9 +157,13 @@ export async function deleteDocument(id: string) {
   } catch (error) {}
 }
 
-export async function getBlogs() {
+export async function getBlogs(page: number = 1) {
   try {
-    const querySnapshot = await getDocs(collection(firestore, "blogs"));
+    const q = query(
+      collection(firestore, "blogs"),
+      orderBy("createdAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
     const blogs: MetaData[] = [];
     querySnapshot.forEach((doc) => {
       blogs.push({ ...doc.data(), _id: doc.id } as MetaData);
