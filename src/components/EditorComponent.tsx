@@ -28,6 +28,10 @@ import {
   InsertCodeBlock,
   InsertSandpack,
   ShowSandpackInfo,
+  imagePlugin,
+  InsertImage,
+  KitchenSinkToolbar,
+  diffSourcePlugin,
 } from "@mdxeditor/editor";
 import { FC, useEffect, useRef, useState } from "react";
 import "@mdxeditor/editor/style.css";
@@ -65,6 +69,19 @@ const simpleSandpackConfig: SandpackConfig = {
   ],
 };
 
+async function imageUploadHandler(image: File) {
+  const formData = new FormData();
+  formData.append("image", image);
+  // send the file to your server and return
+  // the URL of the uploaded image in the response
+  const response = await fetch("/uploads/new", {
+    method: "POST",
+    body: formData,
+  });
+  const json = (await response.json()) as { url: string };
+  return json.url;
+}
+
 /**
  * Extend this Component further with the necessary plugins or props you need.
  * proxying the ref is necessary. Next.js dynamically imported components don't support refs.
@@ -74,13 +91,21 @@ const EditorComponent: FC<EditorProps> = ({ markdown, editorRef }) => {
     <MDXEditor
       ref={editorRef}
       markdown={markdown ?? ""}
-      contentEditableClassName={`${styles.markdown}`}
+      contentEditableClassName={`prose dark:prose-invert lg:prose-xl w-full min-h-screen`}
       plugins={[
         headingsPlugin(),
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
+        imagePlugin({
+          imageUploadHandler,
+          imageAutocompleteSuggestions: [],
+        }),
+        diffSourcePlugin({
+          diffMarkdown: "An older version",
+          viewMode: "rich-text",
+        }),
         frontmatterPlugin(),
         linkPlugin(),
         linkDialogPlugin({
@@ -97,11 +122,13 @@ const EditorComponent: FC<EditorProps> = ({ markdown, editorRef }) => {
         toolbarPlugin({
           toolbarContents: () => (
             <>
-              <UndoRedo />
+              <KitchenSinkToolbar />
+              {/* <UndoRedo />
               <BoldItalicUnderlineToggles />
               <BlockTypeSelect />
-              <CodeToggle />
               <CreateLink />
+              <InsertImage />
+              <CodeToggle />
               <InsertFrontmatter />
               <ConditionalContents
                 options={[
@@ -122,7 +149,7 @@ const EditorComponent: FC<EditorProps> = ({ markdown, editorRef }) => {
                     ),
                   },
                 ]}
-              />
+              /> */}
             </>
           ),
         }),

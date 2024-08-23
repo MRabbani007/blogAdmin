@@ -10,7 +10,6 @@ import { CiEdit } from "react-icons/ci";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
 import { Toaster } from "react-hot-toast";
-import TextEditor from "../ui/TextEditor.jsx";
 
 const EditorComp = dynamic(() => import("../EditorComponent"), { ssr: false });
 
@@ -70,11 +69,9 @@ export default function FormEditBlog({ content, data }: Props) {
   }, [metaData]);
 
   return (
-    <main className="space-y-4 max-w-[1024px] mx-auto">
+    <main className="space-y-4 mx-auto">
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
-      {/* <Suspense fallback={<p>Loading Editor...</p>}>
-        <EditorComp markdown={content} editorRef={ref} />
-      </Suspense> */}
+
       <div className="flex items-center gap-4 group">
         <h3>{metaData.title !== "" ? metaData.title : "Add Title"}</h3>
         <button
@@ -86,7 +83,9 @@ export default function FormEditBlog({ content, data }: Props) {
       </div>
 
       <hr className="w-full h-2" />
-      <TextEditor />
+      <Suspense fallback={<p>Loading Editor...</p>}>
+        <EditorComp markdown={content} editorRef={ref} />
+      </Suspense>
       <FormEditMetaData
         metaData={metaData}
         setMetaData={setMetaData}
