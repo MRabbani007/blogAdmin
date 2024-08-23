@@ -1,0 +1,45 @@
+.markdown {
+  font-family: "Roboto";
+  color: rgb(168, 168, 168);
+}
+
+.markdown * {
+  box-sizing: border-box;
+}
+
+.markdown h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 2rem;
+  color: white;
+}
+
+.markdown h2 {
+  font-size: 1.75rem;
+  color: white;
+  text-decoration: underline;
+  text-decoration: dashed;
+}
+
+.markdown h3 {
+  font-size: 1.5rem;
+  color: rgb(230, 230, 230);
+}
+
+.markdown p {
+  font-size: 1rem;
+}
+
+.markdown ul {
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+.markdown ol {
+  list-style-type: decimal-leading-zero;
+  list-style-position: inside;
+}
+
+.markdown ul li {
+  line-height: 1rem;
+}
