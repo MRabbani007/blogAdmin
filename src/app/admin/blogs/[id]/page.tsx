@@ -10,7 +10,7 @@ type Props = {
 export default async function EditBlogPage({ params }: Props) {
   if (!params.id) notFound();
 
-  const blog = await getBlogByName(params.id);
+  const blog = await getBlogByName(decodeURIComponent(params.id));
   // const handleSelect = (event: ChangeEvent<HTMLInputElement>) => {
   //   if (event.target.files) {
   //     setFile(event.target.files[0]);

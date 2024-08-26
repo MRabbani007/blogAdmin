@@ -1,3 +1,20 @@
+import { StringToBoolean } from "class-variance-authority/types";
+
+export type User = {
+  id: string;
+  _id?: string;
+
+  username: string;
+  email: string;
+
+  firstName: string;
+  lastName: string;
+  profilePic?: string;
+
+  createdAt?: TimeStamp;
+  updatedAt?: TimeStamp;
+};
+
 export type MetaData = {
   id: string;
   _id?: string;
@@ -11,6 +28,10 @@ export type MetaData = {
   icon?: string;
   sortIndex?: number;
   banner?: string;
+
+  author?: string;
+  authorID?: string;
+  authorProfile?: string;
 
   views?: number;
   likes?: number;

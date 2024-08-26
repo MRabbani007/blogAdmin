@@ -13,7 +13,7 @@ export default function SearchBlog() {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex items-center gap-4 py-2 px-4 bg-zinc-950 rounded-lg"
+      className="flex items-center gap-4 py-2 px-4 bg-zinc-300 dark:bg-zinc-950 rounded-lg"
     >
       <input
         type="text"

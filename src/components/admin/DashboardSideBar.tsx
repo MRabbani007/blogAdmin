@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { BsPostcard } from "react-icons/bs";
 import { IoHome, IoSettingsOutline } from "react-icons/io5";
@@ -27,8 +27,7 @@ const items = [
   },
 ];
 
-export default function SideBar() {
-  const router = useRouter();
+export default function DashboardSideBar() {
   const pathname = usePathname();
 
   const isActive = (path: string) => (pathname === path ? true : false);

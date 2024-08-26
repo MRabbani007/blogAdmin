@@ -5,6 +5,8 @@ import Navbar from "@/components/layout/Navbar";
 import Topics from "@/components/Topics";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import AuthProvider from "@/context/AuthProvider";
+import { CATEGORIES, TAGS } from "@/lib/data";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,12 +29,43 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <AuthProvider>
-        <body className={inter.className}>
-          <Navbar />
-          {children}
-        </body>
-      </AuthProvider>
+      <body className={inter.className}>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <div className="flex items-stretch gap-4">
+              {children}
+              <div className="hidden py-0 px-4">
+                <div>
+                  <p className="font-bold text-xl my-4">Topics</p>
+                  <ul className="flex items-center gap-2 text-sm flex-wrap max-w-[300px]">
+                    {CATEGORIES.map((cat, idx) => (
+                      <li key={idx} className="bg-zinc-800 py-2 px-4">
+                        {cat.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-bold text-xl my-4">Tags</p>
+                  <ul className="flex items-center gap-2 text-sm flex-wrap max-w-[300px]">
+                    {TAGS.map((cat, idx) => (
+                      <li key={idx} className="bg-zinc-800 py-2 px-4">
+                        {cat.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

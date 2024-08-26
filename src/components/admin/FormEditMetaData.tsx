@@ -34,6 +34,10 @@ export default function FormEditMetaData({
     });
   }, [state.title]);
 
+  useEffect(() => {
+    setState(metaData);
+  }, [metaData]);
+
   const onChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -57,9 +61,16 @@ export default function FormEditMetaData({
   const handleAddTag = () => {
     if (tag !== "") {
       setState((curr) => {
-        return { ...curr, tags: curr.tags.push(tag) };
+        return { ...curr, tags: [...curr.tags, tag] };
       });
     }
+  };
+
+  const handleRemoveTag = (idx: number) => {
+    setState((curr) => {
+      const tags = curr.tags.splice(idx, 1);
+      return { ...curr, tags };
+    });
   };
 
   const onSubmit = () => {
@@ -187,9 +198,14 @@ export default function FormEditMetaData({
             <BiX size={30} />
           </button>
         </div>
-        <ul>
+        <ul className="flex items-center gap-2">
           {state.tags.map((tag, idx) => (
-            <li key={idx}>{tag}</li>
+            <li key={idx} className="flex items-center gap-2">
+              <span>{`#${tag}`}</span>
+              <button type="button" onClick={() => handleRemoveTag(idx)}>
+                <BiX size={24} />
+              </button>
+            </li>
           ))}
         </ul>
       </div>

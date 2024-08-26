@@ -1,7 +1,7 @@
-import SideBar from "@/components/SideBar";
+import React from "react";
+import DashboardSideBar from "@/components/admin/DashboardSideBar";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function AdminLayout({
   children,
@@ -22,7 +22,7 @@ export default async function AdminLayout({
   return (
     <>
       <div className="flex items-stretch flex-1">
-        <SideBar />
+        <DashboardSideBar />
         {children}
       </div>
     </>

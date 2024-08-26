@@ -2,7 +2,6 @@
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import FormUploadFile from "../FormUploadFile";
-import Editor from "../EditorComponent";
 import { createDoc, uploadFile } from "@/lib/firebase";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,12 @@ import { CiEdit } from "react-icons/ci";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
 import toast, { Toaster } from "react-hot-toast";
-import TextEditor from "../ui/TextEditor.jsx";
+import dynamic from "next/dynamic";
+import MetaDataPreview from "./MetaDataPreview";
+
+const EditorComponent = dynamic(() => import("../EditorComponent"), {
+  ssr: false,
+});
 
 const template: MetaData = {
   id: "",
@@ -89,54 +93,47 @@ export default function FormCreateBlog() {
   }, [file]);
 
   const handleSave = async (status: string = "draft") => {
-    if (metaData.slug === "") {
-      alert("Provide title");
-      return null;
+    try {
+      if (metaData.slug === "") {
+        alert("Provide title");
+        return null;
+      }
+
+      const text = ref.current?.getMarkdown() ?? "";
+
+      var enc = new TextEncoder();
+      const encodedContent = enc.encode(text);
+      const newBlogFile = new Blob([encodedContent]);
+
+      const { downloadURL } = await uploadFile(
+        newBlogFile,
+        "/blogs/",
+        metaData.filename
+      );
+
+      await createDoc("blogs", {
+        ...metaData,
+        status,
+        downloadURL: downloadURL ?? "",
+      });
+
+      toast.success("Blog created");
+
+      router.push("/admin/blogs");
+    } catch (error) {
+      toast.error("Error Saving Post");
     }
-
-    const text = ref.current?.getMarkdown() ?? "";
-
-    var enc = new TextEncoder();
-    const encodedContent = enc.encode(text);
-    const newBlogFile = new Blob([encodedContent]);
-
-    const { downloadURL } = await uploadFile(
-      newBlogFile,
-      "/blogs/",
-      metaData.filename
-    );
-
-    await createDoc("blogs", {
-      ...metaData,
-      status,
-      downloadURL: downloadURL ?? "",
-    });
-
-    toast.success("Blog created");
-
-    router.push("/admin/blogs");
   };
-
-  useEffect(() => {
-    console.log(metaData);
-  }, [metaData]);
 
   return (
     <main className="space-y-4">
-      <div className="flex items-center gap-4 group">
-        <h3>{metaData.title !== "" ? metaData.title : "Add Title"}</h3>
-        <button
-          className="invisible group-hover:visible duration-100"
-          onClick={() => setEditMetaData(true)}
-        >
-          <CiEdit size={20} />
-        </button>
-      </div>
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
-      {/* <Suspense fallback={null}>
-        <Editor markdown={""} editorRef={ref} />
-      </Suspense> */}
-      <TextEditor />
+
+      <MetaDataPreview metaData={metaData} setEditMetaData={setEditMetaData} />
+
+      <Suspense fallback={null}>
+        <EditorComponent markdown={""} editorRef={ref} />
+      </Suspense>
       <div className="flex items-center gap-4 justify-between">
         <button
           className="py-2 px-4 rounded-lg bg-purple-600"

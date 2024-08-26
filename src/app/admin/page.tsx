@@ -50,7 +50,7 @@ export default function AdminDashboard() {
           </div>
           <div className="flex-1 bg-zinc-800"></div>
         </div>
-        <div>
+        {/* <div>
           <div className="bg-zinc-900 p-4 rounded-xl ">Blogs by Category</div>
           <div className="space-y-2 pt-2">
             {categories.map((item, index) => (
@@ -60,7 +60,7 @@ export default function AdminDashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

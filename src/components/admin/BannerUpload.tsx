@@ -11,12 +11,19 @@ interface Props {
   setMetaData: Dispatch<SetStateAction<MetaData>>;
 }
 
+const allowedTypes = ["png", "jpg", "jpeg"];
+
 export default function BannerUpload({ metaData, setMetaData }: Props) {
   const [file, setFile] = useState<File | null>(null);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
-      setFile(acceptedFiles[0]);
+      const type = acceptedFiles[0].type;
+      if (allowedTypes.includes(type.replace("image/", ""))) {
+        setFile(acceptedFiles[0]);
+      } else {
+        toast.error("Wrong file type");
+      }
     },
   });
 
@@ -48,10 +55,12 @@ export default function BannerUpload({ metaData, setMetaData }: Props) {
     <div
       {...getRootProps()}
       className={
-        (metaData?.banner || file
+        (isDragActive
+          ? "border-4"
+          : file || metaData?.banner
           ? ""
-          : "hover:border-4 border-2 border-dashed border-zinc-600 ") +
-        " w-full flex flex-col gap-4 items-center duration-100"
+          : "border-2") +
+        " border-dashed border-zinc-600 w-full flex flex-col gap-4 items-center duration-100"
       }
     >
       {metaData?.banner ? (

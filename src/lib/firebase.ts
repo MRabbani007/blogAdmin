@@ -14,17 +14,21 @@ import {
   collection,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDocs,
   getFirestore,
   limit,
   orderBy,
   query,
   serverTimestamp,
+  startAfter,
+  startAt,
   Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { MetaData } from "../../types";
+import { MetaData, User } from "../../types";
+import { ITEMS_PER_PAGE } from "./data";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_tToQ_1sWj3zBc52yRTtjz9aW_7ss1Hw",
@@ -122,14 +126,56 @@ export async function createDoc(table: string, document: MetaData) {
   }
 }
 
+export async function getDbUser(id: string) {
+  try {
+    const q = query(collection(firestore, "users"), where("id", "==", id));
+
+    const querySnapshot = await getDocs(q);
+
+    let response: User[] = [];
+    querySnapshot.forEach((doc) => {
+      response.push({ ...doc.data(), _id: doc.id } as User);
+    });
+
+    return response?.length !== 0 ? response[0] : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function createDBUser(document: User) {
+  try {
+    const col = collection(firestore, "users");
+    const createdAt = serverTimestamp();
+    //  Timestamp.fromDate(new Date());
+    const updatedAt = serverTimestamp();
+
+    const docRef = await addDoc(col, { ...document, createdAt, updatedAt });
+  } catch (error) {
+    throw new Error("Failed to create user");
+  }
+}
+
 export async function updateDocument(document: MetaData) {
   try {
+    console.log(document);
+
     if (!document._id) return;
 
     const docRef = doc(firestore, "blogs", document._id);
 
-    const { title, slug, detail, category, status, tags, downloadURL, banner } =
-      document;
+    const {
+      title,
+      slug,
+      detail,
+      category,
+      status,
+      tags,
+      downloadURL,
+      banner,
+      sortIndex,
+    } = document;
+
     await updateDoc(docRef, {
       title,
       slug,
@@ -139,11 +185,15 @@ export async function updateDocument(document: MetaData) {
       tags,
       banner,
       downloadURL,
+      sortIndex,
       updatedAt: serverTimestamp(),
       // Timestamp.fromDate(new Date()),
     });
+
+    return { status: "success" };
   } catch (error) {
     console.log(error);
+    return { status: "error" };
   }
 }
 
@@ -159,18 +209,66 @@ export async function deleteDocument(id: string) {
 
 export async function getBlogs(page: number = 1) {
   try {
+    const count_q = query(
+      collection(firestore, "blogs"),
+      where("status", "==", "published")
+      // orderBy("updatedAt", "desc")
+    );
+
     const q = query(
       collection(firestore, "blogs"),
-      orderBy("createdAt", "desc")
+      where("status", "==", "published")
+      // orderBy("updatedAt", "desc"),
+      // orderBy("title", "asc")
     );
+
     const querySnapshot = await getDocs(q);
+    const response = await getCountFromServer(count_q);
+
+    // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
     const blogs: MetaData[] = [];
     querySnapshot.forEach((doc) => {
       blogs.push({ ...doc.data(), _id: doc.id } as MetaData);
     });
-    return blogs;
+
+    return { count: response.data().count, blogs };
   } catch (error) {
-    return [];
+    console.log(error);
+    return { count: 0, blogs: [] };
+  }
+}
+
+export async function getBlogsAdmin(
+  page: number = 1,
+  status: string = "published"
+) {
+  try {
+    const count_q = query(
+      collection(firestore, "blogs"),
+      orderBy("updatedAt", "desc")
+    );
+    const q = query(
+      collection(firestore, "blogs"),
+      orderBy("updatedAt", "desc")
+      // startAt(5),
+      // limit(ITEMS_PER_PAGE)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const response = await getCountFromServer(count_q);
+
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    const blogs: MetaData[] = [];
+    querySnapshot.forEach((doc) => {
+      blogs.push({ ...doc.data(), _id: doc.id } as MetaData);
+    });
+
+    return { count: response.data().count, blogs, lastVisible };
+  } catch (error) {
+    console.log(error);
+    return { count: 0, blogs: [] };
   }
 }
 

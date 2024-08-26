@@ -3,10 +3,10 @@ export const ITEMS_PER_PAGE = 5;
 export const CATEGORIES = [
   { label: "HTML, CSS & JS", value: "HTML, CSS & JS" },
   { label: "Full Stack", value: "Full Stack" },
-  { label: "Frontend Frameworks", value: "Frontend Frameworks" },
-  { label: "Backend Frameworks", value: "Backend Frameworks" },
+  { label: "Frontend", value: "Frontend Frameworks" },
+  { label: "Backend", value: "Backend Frameworks" },
   { label: "Styling", value: "Styling" },
-  { label: "UI Component Libraries", value: "UI Component Libraries" },
+  { label: "UI Libraries", value: "UI Component Libraries" },
   { label: "Databases", value: "Databases" },
   { label: "Version Control", value: "Version Control" },
 ];
@@ -21,4 +21,5 @@ export const STATUS = [
   { label: "draft", value: "draft" },
   { label: "published", value: "published" },
   { label: "archive", value: "archive" },
+  { label: "test", value: "test" },
 ];

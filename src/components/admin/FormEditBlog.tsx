@@ -9,9 +9,12 @@ import { useRouter } from "next/navigation";
 import { CiEdit } from "react-icons/ci";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import MetaDataPreview from "./MetaDataPreview";
 
-const EditorComp = dynamic(() => import("../EditorComponent"), { ssr: false });
+const EditorComponent = dynamic(() => import("../EditorComponent"), {
+  ssr: false,
+});
 
 const template: MetaData = {
   id: "",
@@ -25,6 +28,7 @@ const template: MetaData = {
 
   category: "",
   tags: [],
+  sortIndex: 0,
 
   filename: "id" + ".mdx",
   pathname: "/blogs/" + "id" + ".mdx",
@@ -45,46 +49,37 @@ export default function FormEditBlog({ content, data }: Props) {
   const [metaData, setMetaData] = useState<MetaData>({ ...template, ...data });
 
   const handleSave = async () => {
-    const mdx = ref.current?.getMarkdown() ?? "";
+    try {
+      const mdx = ref.current?.getMarkdown() ?? "";
 
-    var enc = new TextEncoder();
-    const encodedContent = enc.encode(mdx);
-    const newBlogFile = new Blob([encodedContent]);
+      var enc = new TextEncoder();
+      const encodedContent = enc.encode(mdx);
+      const newBlogFile = new Blob([encodedContent]);
 
-    const { downloadURL } = await uploadFile(
-      newBlogFile,
-      "/blogs/",
-      data.id + ".mdx"
-    );
+      const { downloadURL } = await uploadFile(
+        newBlogFile,
+        "/blogs/",
+        data.id + ".mdx"
+      );
 
-    await updateDocument({ ...metaData, downloadURL: downloadURL ?? "" });
+      await updateDocument({ ...metaData, downloadURL: downloadURL ?? "" });
 
-    alert("Post updated");
+      toast.success("Post updated");
 
-    router.push("/admin/blogs");
+      router.push("/admin/blogs");
+    } catch (error) {
+      toast.error("Error Saving Post");
+    }
   };
-
-  useEffect(() => {
-    console.log(metaData);
-  }, [metaData]);
 
   return (
     <main className="space-y-4 mx-auto">
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
 
-      <div className="flex items-center gap-4 group">
-        <h3>{metaData.title !== "" ? metaData.title : "Add Title"}</h3>
-        <button
-          className="invisible group-hover:visible duration-100"
-          onClick={() => setEditMetaData(true)}
-        >
-          <CiEdit size={20} />
-        </button>
-      </div>
-
-      <hr className="w-full h-2" />
+      <MetaDataPreview metaData={metaData} setEditMetaData={setEditMetaData} />
+      {/* <hr className="w-full h-2" /> */}
       <Suspense fallback={<p>Loading Editor...</p>}>
-        <EditorComp markdown={content} editorRef={ref} />
+        <EditorComponent markdown={content} editorRef={ref} />
       </Suspense>
       <FormEditMetaData
         metaData={metaData}

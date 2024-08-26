@@ -1,9 +1,8 @@
-import Pagination from "@/components/Pagination";
-import SearchBlog from "@/components/SearchBlog";
-import { getBlogs } from "@/lib/firebase";
 import React from "react";
-import BlogCard from "./BlogCard";
-import { MetaData } from "../../../../types";
+import DashboardBlogPostCard from "@/components/admin/DashboardBlogPostCard";
+import SearchBlog from "@/components/SearchBlog";
+import { getBlogs, getBlogsAdmin } from "@/lib/firebase";
+import Pagination from "@/components/Pagination";
 
 const BLOGS = [
   { id: "1", title: "First Blog", slug: "First_Blog", status: "draft" },
@@ -16,7 +15,7 @@ export default async function BlogsPage() {
 
   let page = 1;
   const setPage = (p: number) => (page = p);
-  const blogs: MetaData[] = await getBlogs();
+  const { count, blogs } = await getBlogsAdmin();
 
   return (
     <main className="flex-1">
@@ -31,7 +30,7 @@ export default async function BlogsPage() {
       <div className="flex-1 space-y-4">
         {blogs &&
           blogs.map((blog, idx) => (
-            <BlogCard
+            <DashboardBlogPostCard
               blog={JSON.parse(JSON.stringify(blog))}
               idx={idx}
               key={idx}
