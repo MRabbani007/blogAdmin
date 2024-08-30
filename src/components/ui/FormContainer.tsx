@@ -1,9 +1,19 @@
 "use client";
 
 import React, { Dispatch, FormEvent, ReactNode, SetStateAction } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./card";
+import { Button } from "./button";
 
 interface Props {
   title: string;
+  description?: string;
   showForm: boolean;
   setShowForm: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
@@ -12,6 +22,7 @@ interface Props {
 
 export default function FormContainer({
   title,
+  description,
   showForm,
   setShowForm,
   children,
@@ -35,24 +46,19 @@ export default function FormContainer({
         " fixed top-0 left-0 bottom-0 right-0 flex flex-col items-center justify-center duration-200 z-50 bg-zinc-500/40"
       }
     >
-      <div className="bg-zinc-950 text-white flex flex-col items-stretch w-full max-w-[1024px]">
-        <h2 className="p-4 font-semibold text-2xl">{title}</h2>
-        <form
-          onSubmit={handleSubmit}
-          onReset={onReset}
-          className="space-y-4 px-8"
-        >
-          {children}
-          <div className="flex items-center justify-center gap-4 p-4">
-            <button type="submit" className="py-2 px-4 border-2 rounded-md">
-              Ok
-            </button>
-            <button type="reset" className="py-2 px-4 border-2 rounded-md">
-              Cancel
-            </button>
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description ?? ""}</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit} onReset={onReset}>
+          <CardContent className="flex flex-col gap-4">{children}</CardContent>
+          <CardFooter className="space-x-4 mx-auto">
+            <Button type="submit">Ok</Button>
+            <Button type="reset">Cancel</Button>
+          </CardFooter>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

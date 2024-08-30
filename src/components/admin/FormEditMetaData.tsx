@@ -11,6 +11,14 @@ import { CATEGORIES, STATUS, TAGS } from "@/lib/data";
 import { MetaData } from "../../../types";
 import FormContainer from "../ui/FormContainer";
 import { BiCheck, BiX } from "react-icons/bi";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+
+import { useForm } from "@conform-to/react";
+import { useFormState } from "react-dom";
+import { parseWithZod } from "@conform-to/zod";
+import { blogSchema } from "@/lib/zodSchemas";
+import { CreateBlog } from "@/lib/actions";
 
 interface Props {
   metaData: MetaData;
@@ -27,6 +35,14 @@ export default function FormEditMetaData({
 }: Props) {
   const [state, setState] = useState(metaData);
   const [tag, setTag] = useState<string>("");
+
+  const [lastResult, action] = useFormState(CreateBlog, undefined);
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: blogSchema });
+    },
+  });
 
   useEffect(() => {
     setState((curr) => {
@@ -81,18 +97,16 @@ export default function FormEditMetaData({
   return (
     <FormContainer
       title="Blog MetaData"
+      description="Add blog metadata"
       onSubmit={onSubmit}
       showForm={showForm}
       setShowForm={setShowForm}
     >
       {/* Title */}
       <div className="field">
-        <label htmlFor="title" className="field_label">
-          Title
-        </label>
-        <input
+        <Label htmlFor="title">Title</Label>
+        <Input
           type="text"
-          className="field_input"
           placeholder="Title"
           id="title"
           name="title"
@@ -102,12 +116,9 @@ export default function FormEditMetaData({
       </div>
       {/* Slug */}
       <div className="field">
-        <label htmlFor="slug" className="field_label">
-          Slug
-        </label>
-        <input
+        <Label htmlFor="slug">Slug</Label>
+        <Input
           type="text"
-          className="field_input"
           placeholder="Slug"
           id="slug"
           name="slug"
@@ -117,14 +128,11 @@ export default function FormEditMetaData({
       </div>
       {/* Sort Index */}
       <div className="field">
-        <label htmlFor="sortIndex" className="field_label">
-          sortIndex
-        </label>
-        <input
+        <Label htmlFor="sortIndex">sortIndex</Label>
+        <Input
           type="number"
           min={0}
           step={1}
-          className="field_input"
           placeholder="sortIndex"
           id="sortIndex"
           name="sortIndex"
@@ -134,12 +142,9 @@ export default function FormEditMetaData({
       </div>
       {/* Detail */}
       <div className="field">
-        <label htmlFor="detail" className="field_label">
-          Detail
-        </label>
-        <input
+        <Label htmlFor="detail">Detail</Label>
+        <Input
           type="text"
-          className="field_input"
           placeholder="detail"
           id="detail"
           name="detail"
@@ -149,15 +154,12 @@ export default function FormEditMetaData({
       </div>
       {/* Category */}
       <div className="field">
-        <label htmlFor="category" className="field_label">
-          Category
-        </label>
+        <Label htmlFor="category">Category</Label>
         <select
           name="category"
           id="category"
           value={state?.category || ""}
           onChange={onChange}
-          className="field_input"
         >
           <option value="">Select</option>
           {CATEGORIES.map((item, index) => (
@@ -169,22 +171,9 @@ export default function FormEditMetaData({
       </div>
       {/* Tags */}
       <div className="field">
-        <span className="field_label">Tags</span>
-        {/* {TAGS.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              value={item.value}
-              checked={state.tags.includes(item.value)}
-              onChange={handleTags}
-              name={"checkbox_" + item.value}
-              id={"checkbox_" + item.value}
-            />
-            <label htmlFor={"checkbox_" + item.value}>{item.label}</label>
-          </div>
-        ))} */}
+        <span>Tags</span>
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
             placeholder="Enter New Tag"
             value={tag}
@@ -211,15 +200,12 @@ export default function FormEditMetaData({
       </div>
       {/* Status */}
       <div className="field">
-        <label htmlFor="status" className="field_label">
-          Status
-        </label>
+        <Label htmlFor="status">Status</Label>
         <select
           name="status"
           id="status"
           value={state?.status || "DRAFT"}
           onChange={onChange}
-          className="field_input"
           required
         >
           {STATUS.map((item, index) => (

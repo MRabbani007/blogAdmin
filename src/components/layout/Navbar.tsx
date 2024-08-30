@@ -17,6 +17,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { CircleUser } from "lucide-react";
+import { RiAdminLine } from "react-icons/ri";
+import {
+  IoCreateOutline,
+  IoLogOutOutline,
+  IoSettingsOutline,
+} from "react-icons/io5";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -47,8 +53,8 @@ export default async function Navbar() {
           </>
         ) : (
           <>
-            <LoginLink postLoginRedirectURL="/admin">Sign in</LoginLink>
-            <RegisterLink postLoginRedirectURL="/">
+            <LoginLink>Sign in</LoginLink>
+            <RegisterLink>
               {/* <button className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg duration-200">
                 Sign up
               </button> */}
@@ -72,10 +78,28 @@ function UserDropDown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href="/admin">Admin</Link>
+          <Link href="/admin/create">
+            <IoCreateOutline size={26} className="mr-2" />
+            Create
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <LogoutLink>Sign Out</LogoutLink>
+          <Link href="/admin">
+            <RiAdminLine size={26} className="mr-2" />
+            Admin
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/settings">
+            <IoSettingsOutline size={26} className="mr-2" />
+            Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <LogoutLink>
+            <IoLogOutOutline size={26} className="mr-2" />
+            Sign Out
+          </LogoutLink>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

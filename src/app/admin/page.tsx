@@ -13,7 +13,7 @@ const categories = [
   { title: "Tailwind", quantity: 10 },
 ];
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
   return (
     <main className="p-4 flex-1 flex flex-col gap-4">
       <div className="">
