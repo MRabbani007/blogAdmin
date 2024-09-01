@@ -8,16 +8,16 @@ export default async function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const { getUser, isAuthenticated } = getKindeServerSession();
+  const { getUser, isAuthenticated } = getKindeServerSession();
 
-  // const user = await getUser();
-  // const isUserAuthenticated = await isAuthenticated();
+  const user = await getUser();
+  const isUserAuthenticated = await isAuthenticated();
 
-  // const isAdmin = user?.email === process.env?.ADMIN_EMAIL;
+  const isAdmin = user ? user?.email === process.env?.ADMIN_EMAIL : false;
 
-  // if (!isAdmin) {
-  //   redirect("/api/auth/login");
-  // }
+  if (!isAdmin) {
+    redirect("/api/auth/login");
+  }
 
   return (
     <>

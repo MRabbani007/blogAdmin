@@ -30,7 +30,7 @@ export default async function Navbar() {
   const session = await getUser();
 
   return (
-    <div className="w-full flex items-center justify-between gap-4 p-4">
+    <div className="w-full flex items-center justify-between gap-4 p-4 bg-white/50">
       <div>
         <Link href="/" className="flex items-center gap-2">
           <Image
