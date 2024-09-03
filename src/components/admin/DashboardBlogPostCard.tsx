@@ -12,6 +12,7 @@ import {
 } from "react-icons/io";
 import { genDate } from "@/lib/date";
 import { MetaData } from "../../../types";
+import { formatDistance } from "date-fns";
 
 type Params = {
   blog: MetaData;
@@ -43,35 +44,44 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
       <div className="flex-1 flex flex-col">
         <div className="flex-1">
           <p className="text-2xl flex items-center gap-4">
-            <span>{blog.sortIndex}</span>
+            <span title="SortIndex">{blog.sortIndex}</span>
             <span>{blog.title}</span>
           </p>
           <p className="text-sm font-light flex items-center gap-4">
-            <span>
+            <span>Created: </span>
+            <span title="Updated">
               {new Date(
-                (blog.updatedAt?.seconds ?? 0) * 1000 +
-                  (blog.updatedAt?.nanoseconds ?? 0) / 1000000
+                (blog.createdAt?.seconds ?? 0) * 1000 +
+                  (blog.createdAt?.nanoseconds ?? 0) / 1000000
               ).toDateString()}
               {/* {genDate(blog?.updatedAt)} */}
             </span>
-            <span>
-              {new Date(
-                (blog.updatedAt?.seconds ?? 0) * 1000 +
-                  (blog.updatedAt?.nanoseconds ?? 0) / 1000000
-              ).toLocaleDateString("en-UK")}
+            <span> - Updated: </span>
+            <span title="">
+              {/* {.toLocaleDateString("en-UK")} */}
+              {formatDistance(
+                new Date(
+                  (blog.updatedAt?.seconds ?? 0) * 1000 +
+                    (blog.updatedAt?.nanoseconds ?? 0) / 1000000
+                ),
+                new Date(),
+                { addSuffix: true }
+              )}
             </span>
           </p>
         </div>
         <div className="flex items-center gap-4">
-          {blog?.status === "published" ? (
-            <IoMdCheckmarkCircleOutline size={30} />
-          ) : blog?.status === "draft" ? (
-            <CiCircleMore size={30} />
-          ) : blog?.status === "archived" ? (
-            <IoIosRemoveCircleOutline size={30} />
-          ) : null}
+          <div title={"Status: " + blog?.status}>
+            {blog?.status === "published" ? (
+              <IoMdCheckmarkCircleOutline size={30} />
+            ) : blog?.status === "draft" ? (
+              <CiCircleMore size={30} />
+            ) : blog?.status === "archived" ? (
+              <IoIosRemoveCircleOutline size={30} />
+            ) : null}
+          </div>
           {/* <span className="mr-2">Status: {blog.status}</span> */}
-          <span>{blog.category}</span>
+          <span title={"Category: " + blog?.category}>{blog?.category}</span>
           <div className="mt-2 flex items-center gap-2">
             {blog.tags.map((tag, idx) => (
               <span

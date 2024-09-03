@@ -10,7 +10,7 @@ interface Props {
 
 export default function CardBlogPost({ blog }: Props) {
   return (
-    <div className="bg-zinc-300 dark:bg-zinc-900 flex items-stretch">
+    <div className="text-primary bg-primary-foreground flex items-stretch">
       <div className="w-52 p-2">
         <Image
           src={blog?.banner ?? "/post_icon.png"}

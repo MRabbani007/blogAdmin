@@ -21,10 +21,10 @@ export default async function BlogsPage() {
     <main className="flex-1">
       <header className="">
         <p className="nunito-sans text-3xl">
-          <span className="text-purple-600 font-semibold">Published </span>
+          <span className="text-accent font-semibold">Published </span>
           <span>Blogs </span>
         </p>
-        <p className="text-purple-700 font-extralight text-xl">Admin Panel</p>
+        <p className="text-accent/80 font-extralight text-xl">Admin Panel</p>
       </header>
       <SearchBlog />
       <div className="flex-1 space-y-4">

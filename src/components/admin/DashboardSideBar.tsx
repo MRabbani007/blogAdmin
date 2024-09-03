@@ -39,7 +39,7 @@ export default function DashboardSideBar() {
           <Link href={item?.url} key={index}>
             <li
               className={
-                (isActive(item.url) ? "bg-purple-700" : "") +
+                (isActive(item.url) ? "bg-accent/30" : "") +
                 " flex flex-col gap-2 items-center justify-center p-4 duration-200"
               }
             >

@@ -26,10 +26,10 @@ export default async function EditBlogPage({ params }: Props) {
     <main>
       <div className="">
         <p className="nunito-sans text-3xl">
-          <span className="text-purple-600 font-semibold">Edit </span>
+          <span className="text-accent font-semibold">Edit </span>
           <span>Blog</span>
         </p>
-        <p className="text-purple-700 font-extralight text-xl">Admin Panel</p>
+        <p className="text-accent-80 font-extralight text-xl">Admin Panel</p>
       </div>
       {blog && (
         <FormEditBlog

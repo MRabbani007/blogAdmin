@@ -14,12 +14,12 @@ export default function DraftBlogsPage() {
       <div className="flex items-start gap-4 justify-between">
         <div className="">
           <p className="nunito-sans text-3xl">
-            <span className="text-purple-600 font-semibold">Draft </span>
+            <span className="text-accent font-semibold">Draft </span>
             <span>Blogs </span>
           </p>
-          <p className="text-purple-700 font-extralight text-xl">Admin Panel</p>
+          <p className="text-accent/80 font-extralight text-xl">Admin Panel</p>
         </div>
-        <div className="flex items-center gap-2 text-purple-600">
+        <div className="flex items-center gap-2 text-accent">
           <MdOutlinePending size={24} />
           <span>/</span>
           <span>Drafts</span>

@@ -28,9 +28,13 @@ export async function GET() {
       await createDBUser(doc);
     }
 
-    return NextResponse.redirect("http://localhost:3000/admin/blogs");
+    return NextResponse.redirect(
+      process.env?.KINDE_SITE_URL ?? "" + "/admin/blogs"
+    );
   } catch (error) {
     console.log("Error updating db user");
-    return NextResponse.redirect("http://localhost:3000/");
+    return NextResponse.redirect(
+      process.env?.KINDE_SITE_URL ?? "" + "/api/auth/login"
+    );
   }
 }

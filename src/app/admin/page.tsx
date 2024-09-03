@@ -19,9 +19,9 @@ export default async function AdminDashboard() {
       <div className="">
         <p className="nunito-sans text-3xl">
           <span>Blogs </span>
-          <span className="text-purple-600 font-semibold">Dashboard</span>
+          <span className="text-accent font-semibold">Dashboard</span>
         </p>
-        <p className="text-purple-700 font-extralight text-xl">Admin Panel</p>
+        <p className="text-accent/80 font-extralight text-xl">Admin Panel</p>
       </div>
       <div className="flex flex-wrap items-center gap-4">
         {items?.map((item, index) => (
@@ -33,14 +33,14 @@ export default async function AdminDashboard() {
             key={index}
           >
             <span className="flex-1 mt-4">{item.label}</span>
-            <span className={`py-2 px-4 bg-slate-100/20 rounded-t-lg`}>
+            <span className={`py-2 px-4 bg-primary-foreground/20 rounded-t-lg`}>
               {item?.quantity}
             </span>
           </div>
         ))}
       </div>
       <div className="flex gap-4">
-        <div className="bg-zinc-900 p-4 rounded-xl flex-1">
+        <div className="bg-primary-foreground p-4 rounded-xl flex-1">
           <div className="flex items-center justify-between">
             <div>Publication Report</div>
             <div>
