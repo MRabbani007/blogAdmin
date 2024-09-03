@@ -5,6 +5,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { MetaData } from "../../../types";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 interface Props {
   metaData: MetaData;
@@ -64,10 +65,19 @@ export default function BannerUpload({ metaData, setMetaData }: Props) {
       }
     >
       {metaData?.banner ? (
-        <img src={metaData.banner} className={"w-full h-full object-cover "} />
+        <Image
+          alt="preview"
+          src={metaData.banner}
+          width={1000}
+          height={800}
+          className={"w-full h-full object-cover "}
+        />
       ) : file ? (
-        <img
+        <Image
+          alt="preview"
           src={URL.createObjectURL(file)}
+          width={1000}
+          height={800}
           className={"w-full h-full object-cover "}
         />
       ) : (

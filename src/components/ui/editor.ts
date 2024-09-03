@@ -1,9 +1,9 @@
-import Embed from "@editorjs/embed";
+// import Embed from "@editorjs/embed";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
 import Header from "@editorjs/header";
 import Quote from "@editorjs/quote";
-import Marker from "@editorjs/marker";
+// import Marker from "@editorjs/marker";
 import InlineCode from "@editorjs/inline-code";
 import { uploadFile } from "@/lib/firebase";
 
@@ -30,7 +30,7 @@ const uploadImageByFile = async (file: File) => {
 };
 
 export const TOOLS = {
-  embed: Embed,
+  // embed: Embed,
   list: {
     class: List,
     inlineToolbar: true,
@@ -56,9 +56,9 @@ export const TOOLS = {
     },
   },
   quote: Quote,
-  Marker: {
-    class: Marker,
-    shortcut: "CMD+SHIFT+M",
-  },
+  // Marker: {
+  //   class: Marker,
+  //   shortcut: "CMD+SHIFT+M",
+  // },
   inlineCode: InlineCode,
 };

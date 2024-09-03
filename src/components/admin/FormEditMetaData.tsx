@@ -37,12 +37,12 @@ export default function FormEditMetaData({
   const [tag, setTag] = useState<string>("");
 
   const [lastResult, action] = useFormState(CreateBlog, undefined);
-  const [form, fields] = useForm({
-    lastResult,
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: blogSchema });
-    },
-  });
+  // const [form, fields] = useForm({
+  //   lastResult,
+  //   onValidate({ formData }) {
+  //     return parseWithZod(formData, { schema: blogSchema });
+  //   },
+  // });
 
   useEffect(() => {
     setState((curr) => {

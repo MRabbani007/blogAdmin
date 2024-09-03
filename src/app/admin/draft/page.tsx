@@ -54,7 +54,7 @@ export default function DraftBlogsPage() {
           </tbody>
         </table>
       </div>
-      <Pagination page={page} setPage={setPage} count={30} />
+      {/* <Pagination page={page} setPage={setPage} count={30} /> */}
     </main>
   );
 }

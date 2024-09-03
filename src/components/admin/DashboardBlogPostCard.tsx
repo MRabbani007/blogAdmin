@@ -10,7 +10,7 @@ import {
   IoIosRemoveCircleOutline,
   IoMdCheckmarkCircleOutline,
 } from "react-icons/io";
-import { genDate } from "@/lib/utils";
+import { genDate } from "@/lib/date";
 import { MetaData } from "../../../types";
 
 type Params = {

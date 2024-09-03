@@ -33,8 +33,11 @@ export default async function PostPage({ params }: Params) {
       <main className="mx-auto p-0">
         {data?.banner && (
           <div className="overflow-y-hidden relative h-[60vh] w-full max-w-[1024px] mx-auto overflow-hidden">
-            <img
+            <Image
+              alt="banner"
               src={data.banner}
+              width={1000}
+              height={800}
               className={
                 "absolute top-1/2 -translate-y-1/2 bottom-0 left-0 right-0 -z-10"
               }
