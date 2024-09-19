@@ -1,16 +1,22 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { FormEvent, Suspense, useRef, useState } from "react";
 import { MetaData } from "../../../types";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import { updateDocument, uploadFile } from "@/lib/firebase";
+import {
+  deleteDocument,
+  deleteFile,
+  publishPost,
+  updateDocument,
+  uploadFile,
+} from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import { CiEdit } from "react-icons/ci";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
 import toast, { Toaster } from "react-hot-toast";
 import MetaDataPreview from "./MetaDataPreview";
+import { Button } from "../ui/button";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
@@ -72,8 +78,42 @@ export default function FormEditBlog({ content, data }: Props) {
     }
   };
 
+  const handlePublish = async () => {
+    try {
+      const mdx = ref.current?.getMarkdown() ?? "";
+
+      var enc = new TextEncoder();
+      const encodedContent = enc.encode(mdx);
+      const newBlogFile = new Blob([encodedContent]);
+
+      const { downloadURL } = await uploadFile(
+        newBlogFile,
+        "/blogs/",
+        data.id + ".mdx"
+      );
+
+      await publishPost({ ...metaData, downloadURL: downloadURL ?? "" });
+
+      toast.success("Post Published");
+
+      router.push("/admin/blogs");
+    } catch (error) {
+      toast.error("Error Saving Post");
+    }
+  };
+
+  const handleDelete = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (confirm("Delete this blog?")) {
+      await deleteFile(data.pathname);
+
+      await deleteDocument(data?.id);
+    }
+  };
+
   return (
-    <main className="space-y-4 mx-auto">
+    <div className="flex flex-col gap-4">
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
 
       <MetaDataPreview metaData={metaData} setEditMetaData={setEditMetaData} />
@@ -89,14 +129,23 @@ export default function FormEditBlog({ content, data }: Props) {
       />
       <Toaster />
       <div className="flex items-center gap-4 justify-center">
-        <button
-          onClick={handleSave}
-          className="py-2 px-4 rounded-lg bg-purple-600"
-        >
+        <Button onClick={handleDelete} variant="destructive" className="">
+          Delete
+        </Button>
+        <Button onClick={handleSave} className="ml-auto">
           Save
-        </button>
-        <button className="py-2 px-4 rounded-lg bg-purple-600">Delete</button>
+        </Button>
+        {data?.status === "draft" ? (
+          <Button variant="default" onClick={handlePublish}>
+            Publish
+          </Button>
+        ) : data?.status === "published" ? (
+          <Button variant="secondary">Archive</Button>
+        ) : null}
+        <Button variant="outline" className="ml-auto">
+          Cancel
+        </Button>
       </div>
-    </main>
+    </div>
   );
 }

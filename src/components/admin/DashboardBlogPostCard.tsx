@@ -1,9 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
 import Link from "next/link";
-import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { deleteDocument, deleteFile } from "@/lib/firebase";
 import Image from "next/image";
 import { CiCircleMore } from "react-icons/ci";
 import {
@@ -12,7 +9,6 @@ import {
 } from "react-icons/io";
 import { genDate } from "@/lib/date";
 import { MetaData } from "../../../types";
-import { formatDistance } from "date-fns";
 
 type Params = {
   blog: MetaData;
@@ -20,21 +16,11 @@ type Params = {
 };
 
 export default function DashboardBlogPostCard({ blog, idx }: Params) {
-  const handleDelete = async (event: FormEvent) => {
-    event.preventDefault();
-
-    if (confirm("Delete this blog?")) {
-      await deleteFile(blog.pathname);
-
-      await deleteDocument(blog?.id);
-    }
-  };
-
   return (
-    <div className="flex items-stretch gap-4 p-4 bg-zinc-300 dark:bg-zinc-900 rounded-lg">
+    <div className="flex items-stretch gap-4 p-4 bg-zinc-100 dark:bg-zinc-900 rounded-lg">
       <div className="h-28 w-auto">
         <Image
-          src={blog?.banner ?? "/blog.png"}
+          src={!blog?.banner || blog?.banner === "" ? "/blog.png" : blog.banner}
           alt="icon"
           width={80}
           height={80}
@@ -45,43 +31,19 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
         <div className="flex-1">
           <p className="text-2xl flex items-center gap-4">
             <span title="SortIndex">{blog.sortIndex}</span>
-            <span>{blog.title}</span>
+            <Link href={`/admin/blogs/${blog.slug}`}>{blog.title}</Link>
           </p>
           <p className="text-sm font-light flex items-center gap-4">
             <span>Created: </span>
-            <span title="Updated">
-              {new Date(
-                (blog.createdAt?.seconds ?? 0) * 1000 +
-                  (blog.createdAt?.nanoseconds ?? 0) / 1000000
-              ).toDateString()}
-              {/* {genDate(blog?.updatedAt)} */}
-            </span>
+            <span title="Created">{genDate(blog?.createdAt)}</span>
             <span> - Updated: </span>
-            <span title="">
-              {/* {.toLocaleDateString("en-UK")} */}
-              {formatDistance(
-                new Date(
-                  (blog.updatedAt?.seconds ?? 0) * 1000 +
-                    (blog.updatedAt?.nanoseconds ?? 0) / 1000000
-                ),
-                new Date(),
-                { addSuffix: true }
-              )}
-            </span>
+            <span title="Updated">{genDate(blog?.updatedAt)}</span>
+            <span> - Published: </span>
+            <span title="Updated">{genDate(blog?.publishedAt)}</span>
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <div title={"Status: " + blog?.status}>
-            {blog?.status === "published" ? (
-              <IoMdCheckmarkCircleOutline size={30} />
-            ) : blog?.status === "draft" ? (
-              <CiCircleMore size={30} />
-            ) : blog?.status === "archived" ? (
-              <IoIosRemoveCircleOutline size={30} />
-            ) : null}
-          </div>
           {/* <span className="mr-2">Status: {blog.status}</span> */}
-          <span title={"Category: " + blog?.category}>{blog?.category}</span>
           <div className="mt-2 flex items-center gap-2">
             {blog.tags.map((tag, idx) => (
               <span
@@ -94,15 +56,23 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-4">
-        <Link href={`/admin/blogs/${blog.slug}`}>
-          <FaEdit size={24} />
-        </Link>
-        <form onSubmit={handleDelete}>
-          <button>
-            <FaRegTrashAlt size={24} />
-          </button>
-        </form>
+      <div className="flex flex-col items-end justify-start gap-2">
+        <div title={"Category: " + blog?.category} className="flex-1">
+          {blog?.category}
+        </div>
+        <div
+          title={"Status: " + blog?.status}
+          className="flex items-center gap-2"
+        >
+          {blog?.status === "published" ? (
+            <IoMdCheckmarkCircleOutline size={30} />
+          ) : blog?.status === "draft" ? (
+            <CiCircleMore size={30} />
+          ) : blog?.status === "archived" ? (
+            <IoIosRemoveCircleOutline size={30} />
+          ) : null}
+          <span>{blog.status}</span>
+        </div>
       </div>
     </div>
   );

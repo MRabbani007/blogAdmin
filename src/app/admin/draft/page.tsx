@@ -1,13 +1,13 @@
-"use client";
-
-import Pagination from "@/components/Pagination";
+import SearchBlog from "@/components/SearchBlog";
+import DashboardBlogPostCard from "@/components/admin/DashboardBlogPostCard";
+import { getBlogsAdmin } from "@/lib/firebase";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlinePending } from "react-icons/md";
 
-export default function DraftBlogsPage() {
-  const [page, setPage] = useState(1);
+export default async function DraftBlogsPage() {
+  const { count, blogs } = await getBlogsAdmin(1, "draft");
 
   return (
     <main>
@@ -25,36 +25,22 @@ export default function DraftBlogsPage() {
           <span>Drafts</span>
         </div>
       </div>
+      <SearchBlog />
       <div className="flex-1">
-        <table className="w-full text-center">
-          <thead>
-            <tr className="bg-zinc-900">
-              <th>#</th>
-              <th>Title</th>
-              <th>Slug</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="">
-              <td className="">#</td>
-              <td className="">Title</td>
-              <td className="">Slug</td>
-              <td className="">
-                <div className="flex items-center justify-center gap-4">
-                  <Link href={`/admin/blogs/edit/${""}`}>
-                    <FaEdit size={24} />
-                  </Link>
-                  <Link href={`/admin/blogs/edit/${""}`}>
-                    <FaRegTrashAlt size={24} />
-                  </Link>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="flex-1 space-y-4">
+          {blogs &&
+            blogs.map((blog, idx) => (
+              <DashboardBlogPostCard
+                blog={JSON.parse(JSON.stringify(blog))}
+                idx={idx}
+                key={idx}
+              />
+            ))}
+          {!blogs || (blogs && blogs.length === 0) ? (
+            <p>No draft blogs</p>
+          ) : null}
+        </div>
       </div>
-      {/* <Pagination page={page} setPage={setPage} count={30} /> */}
     </main>
   );
 }

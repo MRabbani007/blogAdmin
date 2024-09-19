@@ -61,8 +61,8 @@ export default async function PostPage({ params }: Params) {
                 <span>Mohamad</span>
                 <span>-</span>
                 <span>Published</span>
-                <span className="italic text-zinc-600 dark:text-zinc-300">
-                  {genDate(data?.createdAt)}
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  {genDate(data?.publishedAt)}
                 </span>
                 <span>Last Updated</span>
                 <span>{genDate(data?.updatedAt)}</span>

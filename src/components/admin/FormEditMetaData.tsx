@@ -115,7 +115,7 @@ export default function FormEditMetaData({
         />
       </div>
       {/* Slug */}
-      <div className="field">
+      {/* <div className="field">
         <Label htmlFor="slug">Slug</Label>
         <Input
           type="text"
@@ -125,7 +125,7 @@ export default function FormEditMetaData({
           value={state?.slug}
           disabled
         />
-      </div>
+      </div> */}
       {/* Sort Index */}
       <div className="field">
         <Label htmlFor="sortIndex">sortIndex</Label>
@@ -171,7 +171,7 @@ export default function FormEditMetaData({
       </div>
       {/* Tags */}
       <div className="field">
-        <span>Tags</span>
+        <p>Tags</p>
         <div className="flex items-center gap-2">
           <Input
             type="text"
@@ -199,7 +199,7 @@ export default function FormEditMetaData({
         </ul>
       </div>
       {/* Status */}
-      <div className="field">
+      {/* <div className="field">
         <Label htmlFor="status">Status</Label>
         <select
           name="status"
@@ -214,7 +214,7 @@ export default function FormEditMetaData({
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
     </FormContainer>
   );
 }

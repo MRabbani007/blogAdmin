@@ -1,19 +1,27 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
 export default function SearchBlog() {
-  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const params = useParams();
+
+  const [search, setSearch] = useState(
+    decodeURIComponent((params?.slug as string) || "")
+  );
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+
+    router.push("/search/" + search);
   };
 
   return (
     <form
       onSubmit={onSubmit}
-      className="flex items-center gap-4 py-2 px-4 bg-zinc-300 dark:bg-zinc-950 rounded-lg"
+      className="flex items-center gap-4 py-2 px-4 bg-zinc-100 dark:bg-zinc-900 rounded-lg"
     >
       <input
         type="text"

@@ -21,6 +21,7 @@ export type MetaData = {
 
   title: string;
   detail?: string;
+  pinned?: boolean;
   slug: string;
   category: string;
   tags: string[];

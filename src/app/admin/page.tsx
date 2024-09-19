@@ -1,10 +1,10 @@
 import React from "react";
 
 const items = [
-  { label: "Total Blogs", quantity: 10, bgColor: "bg-purple-700" },
-  { label: "Total Topics", quantity: 5, bgColor: "bg-rose-700" },
-  { label: "Total Tags", quantity: 12, bgColor: "bg-yellow-700" },
-  { label: "Draft", quantity: 2, bgColor: "bg-sky-700" },
+  { label: "Total Blogs", quantity: 10, bgColor: "bg-purple-700/40" },
+  { label: "Total Topics", quantity: 5, bgColor: "bg-rose-700/40" },
+  { label: "Total Tags", quantity: 12, bgColor: "bg-yellow-700/40" },
+  { label: "Draft", quantity: 2, bgColor: "bg-sky-700/40" },
 ];
 
 const categories = [

@@ -28,7 +28,6 @@ import {
   where,
 } from "firebase/firestore";
 import { MetaData, User } from "../../types";
-import { ITEMS_PER_PAGE } from "./data";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_tToQ_1sWj3zBc52yRTtjz9aW_7ss1Hw",
@@ -158,8 +157,6 @@ export async function createDBUser(document: User) {
 
 export async function updateDocument(document: MetaData) {
   try {
-    console.log(document);
-
     if (!document._id) return;
 
     const docRef = doc(firestore, "blogs", document._id);
@@ -197,6 +194,45 @@ export async function updateDocument(document: MetaData) {
   }
 }
 
+export async function publishPost(document: MetaData) {
+  try {
+    if (!document._id) return;
+
+    const docRef = doc(firestore, "blogs", document._id);
+
+    const {
+      title,
+      slug,
+      detail,
+      category,
+      tags,
+      downloadURL,
+      banner,
+      sortIndex,
+    } = document;
+
+    await updateDoc(docRef, {
+      title,
+      slug,
+      detail,
+      category,
+      status: "published",
+      tags,
+      banner,
+      downloadURL,
+      sortIndex,
+      updatedAt: serverTimestamp(),
+      publishedAt: serverTimestamp(),
+      // Timestamp.fromDate(new Date()),
+    });
+
+    return { status: "success" };
+  } catch (error) {
+    console.log(error);
+    return { status: "error" };
+  }
+}
+
 export async function deleteDocument(id: string) {
   try {
     const q = query(collection(firestore, "blogs"), where("id", "==", id));
@@ -205,6 +241,32 @@ export async function deleteDocument(id: string) {
       await deleteDoc(item.ref);
     });
   } catch (error) {}
+}
+
+export async function searchBlogs(search: string) {
+  try {
+    const count_q = query(
+      collection(firestore, "blogs"),
+      where("title", "==", search)
+    );
+
+    const q = query(
+      collection(firestore, "blogs"),
+      where("title", "==", search)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const response = await getCountFromServer(count_q);
+
+    const blogs: MetaData[] = [];
+    querySnapshot.forEach((doc) => {
+      blogs.push({ ...doc.data(), _id: doc.id } as MetaData);
+    });
+
+    return { count: response.data().count, blogs };
+  } catch (error) {
+    return { count: 0, blogs: [] };
+  }
 }
 
 export async function getBlogs(page: number = 1) {
@@ -250,7 +312,8 @@ export async function getBlogsAdmin(
     );
     const q = query(
       collection(firestore, "blogs"),
-      orderBy("updatedAt", "desc")
+      // orderBy("updatedAt", "desc"),
+      where("status", "==", status)
       // startAt(5),
       // limit(ITEMS_PER_PAGE)
     );

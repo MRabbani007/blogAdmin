@@ -1,6 +1,5 @@
 import FormEditBlog from "@/components/admin/FormEditBlog";
 import { getBlogByName } from "@/lib/firebase";
-import React, { ChangeEvent, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -17,10 +16,12 @@ export default async function EditBlogPage({ params }: Props) {
   //   }
   // };
 
+  if (!blog) notFound();
+
   const rawMDX = blog?.rawMDX;
   const data = blog?.data;
 
-  if (!rawMDX || !data) notFound();
+  if (!rawMDX && !data) notFound();
 
   return (
     <main>
@@ -33,7 +34,7 @@ export default async function EditBlogPage({ params }: Props) {
       </div>
       {blog && (
         <FormEditBlog
-          content={rawMDX}
+          content={rawMDX ?? ""}
           data={JSON.parse(JSON.stringify(data))}
         />
       )}

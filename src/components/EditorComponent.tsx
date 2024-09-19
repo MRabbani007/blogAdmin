@@ -91,7 +91,7 @@ const EditorComponent: FC<EditorProps> = ({ markdown, editorRef }) => {
     <MDXEditor
       ref={editorRef}
       markdown={markdown ?? ""}
-      contentEditableClassName={`prose dark:prose-invert lg:prose-xl w-full min-h-screen`}
+      contentEditableClassName={`prose prose-zinc lg:prose-xl w-full min-h-screen`}
       plugins={[
         headingsPlugin(),
         listsPlugin(),

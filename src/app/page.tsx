@@ -2,17 +2,16 @@ import { getBlogs } from "@/lib/firebase";
 import { IoSearch } from "react-icons/io5";
 import Pagination from "@/components/Pagination";
 import CardBlogPost from "@/components/blogs/CardBlogPost";
+import SearchBlog from "@/components/SearchBlog";
 
 export default async function Home() {
   const response = await getBlogs(1);
+
   const { count, blogs } = response;
 
   return (
-    <main className="flex-shrink-0 max-w-[1024px] min-w-[1024px] w-full mx-auto">
-      {/* <header className="p-4">
-        <h1 className="font-extrabold text-6xl">My Blog</h1>
-      </header> */}
-      <form className="flex items-center gap-4 border-2 border-zinc-800 rounded-lg py-2 px-4">
+    <main className="max-w-[1024px] min-w-[1024px] w-full mx-auto">
+      {/* <form className="flex items-center gap-4 border-2 border-zinc-800 rounded-lg py-2 px-4">
         <input
           type="text"
           name="search"
@@ -23,7 +22,8 @@ export default async function Home() {
         <button type="submit">
           <IoSearch size={30} />
         </button>
-      </form>
+      </form> */}
+      <SearchBlog />
       <p className="py-2 px-4 bg-zinc-300 dark:bg-zinc-800 w-fit">
         Latest Posts
       </p>

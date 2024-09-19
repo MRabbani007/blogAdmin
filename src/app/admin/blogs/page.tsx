@@ -15,7 +15,7 @@ export default async function BlogsPage() {
 
   let page = 1;
   const setPage = (p: number) => (page = p);
-  const { count, blogs } = await getBlogsAdmin();
+  const { count, blogs } = await getBlogsAdmin(1, "published");
 
   return (
     <main className="flex-1">
@@ -36,7 +36,9 @@ export default async function BlogsPage() {
               key={idx}
             />
           ))}
-        {!blogs || (blogs && blogs.length === 0) ? <p>No blogs</p> : null}
+        {!blogs || (blogs && blogs.length === 0) ? (
+          <p>No published blogs</p>
+        ) : null}
       </div>
       {/* <Pagination page={page} setPage={setPage} count={30} /> */}
     </main>

@@ -28,7 +28,8 @@ export default function CardBlogPost({ blog }: Props) {
           <p className="font-light text-sm flex items-center gap-4">
             <span>Mohamad</span>
             <span>-</span>
-            <span>{genDate(blog?.updatedAt)}</span>
+            <span>Published</span>
+            <span>{genDate(blog?.publishedAt)}</span>
           </p>
         </div>
         <div className="space-x-4 p-4 text-sm text-zinc-200 ">

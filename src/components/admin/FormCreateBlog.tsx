@@ -12,6 +12,7 @@ import BannerUpload from "./BannerUpload";
 import toast, { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
 import MetaDataPreview from "./MetaDataPreview";
+import { Button } from "../ui/button";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
@@ -61,7 +62,7 @@ export default function FormCreateBlog() {
       title: "",
       slug: "",
       detail: "",
-      status: "",
+      status: "draft",
 
       category: "",
       tags: [],
@@ -92,10 +93,10 @@ export default function FormCreateBlog() {
     }
   }, [file]);
 
-  const handleSave = async (status: string = "draft") => {
+  const handleSave = async () => {
     try {
       if (metaData.slug === "") {
-        alert("Provide title");
+        alert("Please provide title for this post");
         return null;
       }
 
@@ -113,7 +114,6 @@ export default function FormCreateBlog() {
 
       await createDoc("blogs", {
         ...metaData,
-        status,
         downloadURL: downloadURL ?? "",
       });
 
@@ -126,7 +126,7 @@ export default function FormCreateBlog() {
   };
 
   return (
-    <main className="space-y-4">
+    <div className="space-y-4">
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
 
       <MetaDataPreview metaData={metaData} setEditMetaData={setEditMetaData} />
@@ -134,27 +134,11 @@ export default function FormCreateBlog() {
       <Suspense fallback={null}>
         <EditorComponent markdown={""} editorRef={ref} />
       </Suspense>
-      <div className="flex items-center gap-4 justify-between">
-        <button
-          className="py-2 px-4 rounded-lg bg-purple-600"
-          onClick={() => setShowForm(true)}
-        >
+      <div className="flex items-center gap-4 justify-center">
+        <Button variant="secondary" onClick={() => setShowForm(true)}>
           Import File
-        </button>
-        <span className="space-x-4">
-          <button
-            onClick={() => handleSave("draft")}
-            className="py-2 px-4 rounded-lg bg-purple-600"
-          >
-            Save Draft
-          </button>
-          <button
-            onClick={() => handleSave("published")}
-            className="py-2 px-4 rounded-lg bg-purple-700"
-          >
-            Publish
-          </button>
-        </span>
+        </Button>
+        <Button onClick={() => handleSave()}>Save Draft</Button>
       </div>
 
       <FormEditMetaData
@@ -169,6 +153,6 @@ export default function FormCreateBlog() {
         setFile={setFile}
       />
       <Toaster />
-    </main>
+    </div>
   );
 }

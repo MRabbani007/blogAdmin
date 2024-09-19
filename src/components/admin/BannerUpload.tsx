@@ -61,7 +61,7 @@ export default function BannerUpload({ metaData, setMetaData }: Props) {
           : file || metaData?.banner
           ? ""
           : "border-2") +
-        " border-dashed border-zinc-600 w-full flex flex-col gap-4 items-center duration-100"
+        " border-dashed border-zinc-600 max-h-[60vh] min-w-[80vw] w-full overflow-hidden flex flex-col gap-4 items-center duration-100"
       }
     >
       {metaData?.banner ? (
@@ -70,7 +70,7 @@ export default function BannerUpload({ metaData, setMetaData }: Props) {
           src={metaData.banner}
           width={1000}
           height={800}
-          className={"w-full h-full object-cover "}
+          className="h-full object-cover"
         />
       ) : file ? (
         <Image
@@ -84,9 +84,6 @@ export default function BannerUpload({ metaData, setMetaData }: Props) {
         <p className="w-fit mx-auto p-10">Add Post Banner</p>
       )}
       <input {...getInputProps()} />
-      {/* <ul>
-            {files && files.map((file) => <li key={file.name}>{file.name}</li>)}
-          </ul> */}
     </div>
   );
 }
