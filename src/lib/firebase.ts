@@ -28,6 +28,7 @@ import {
   where,
 } from "firebase/firestore";
 import { MetaData, User } from "../../types";
+import { metadata } from "@/app/layout";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_tToQ_1sWj3zBc52yRTtjz9aW_7ss1Hw",
@@ -348,16 +349,16 @@ export async function getBlogByName(slug: string) {
 
     // const url = await getDownloadURL(storageRef)
     const file = await getBytes(storageRef);
-    const meta = await getMetadata(storageRef);
+    // const meta = await getMetadata(storageRef);
 
     // const t = new Blob([data]);
     var enc = new TextDecoder("utf-8");
     const content = enc.decode(file);
 
-    return { data: data[0], rawMDX: content };
+    return { metadata: data[0], rawMDX: content };
   } catch (error) {
     console.log(error);
-    return null;
+    return { metadata: null, rawMDX: null };
   }
 }
 

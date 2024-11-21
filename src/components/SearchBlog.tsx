@@ -15,7 +15,10 @@ export default function SearchBlog() {
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    router.push("/search/" + search);
+    const newParams = new URLSearchParams(window.location.search);
+    newParams.set("search", search);
+
+    router.push(`${window.location.pathname}?${newParams}`);
   };
 
   return (
@@ -30,10 +33,10 @@ export default function SearchBlog() {
         placeholder="Search..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="bg-transparent border-none outline-none py-2 px-4 flex-1"
+        className="bg-transparent border-none outline-none px-4 flex-1"
       />
       <button type="submit">
-        <IoSearch size={30} />
+        <IoSearch size={25} />
       </button>
     </form>
   );

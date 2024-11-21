@@ -1,7 +1,6 @@
-import { createDBUser, getDbUser } from "@/lib/firebase";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { User } from "../../../../../types";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/db";
 
 export async function GET() {
   try {
@@ -12,20 +11,32 @@ export async function GET() {
       throw new Error("Could not fetch user");
     }
 
-    const dbUser = await getDbUser(user?.id);
+    // const dbUser = await getDbUser(user?.id);
+    const dbUser = await prisma.user.findUnique({
+      where: { kindeId: user.id },
+    });
 
     if (!dbUser) {
-      const doc: User = {
-        id: user?.id ?? "",
-        email: user?.email ?? "",
-        username: user?.username ?? "",
+      // const doc: User = {
+      //   id: user?.id ?? "",
+      //   email: user?.email ?? "",
+      //   username: user?.username ?? "",
 
-        firstName: user?.given_name ?? "",
-        lastName: user?.family_name ?? "",
-        profilePic:
-          user?.picture ?? `https://avatar.vercel.sh/${user?.given_name}`,
-      };
-      await createDBUser(doc);
+      //   firstName: user?.given_name ?? "",
+      //   lastName: user?.family_name ?? "",
+      //   profilePic:
+      //     user?.picture ?? `https://avatar.vercel.sh/${user?.given_name}`,
+      // };
+      // await createDBUser(doc);
+      await prisma.user.create({
+        data: {
+          kindeId: user.id,
+          username: user.username ?? "",
+          firstName: user?.given_name,
+          lastName: user?.family_name,
+          email: user?.email,
+        },
+      });
     }
 
     return NextResponse.redirect(
@@ -33,6 +44,8 @@ export async function GET() {
     );
   } catch (error) {
     console.log("Error updating db user");
+    console.log(error);
+
     return NextResponse.redirect(
       process.env?.KINDE_SITE_URL ?? "" + "/api/auth/login"
     );

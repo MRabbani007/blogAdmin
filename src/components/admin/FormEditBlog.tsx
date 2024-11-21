@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import React, { FormEvent, Suspense, useRef, useState } from "react";
-import { MetaData } from "../../../types";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import {
   deleteDocument,
@@ -17,42 +16,56 @@ import BannerUpload from "./BannerUpload";
 import toast, { Toaster } from "react-hot-toast";
 import MetaDataPreview from "./MetaDataPreview";
 import { Button } from "../ui/button";
+import { UpdateBlogPost } from "@/lib/actions";
+import { BlogPost } from "@prisma/client";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
 });
 
-const template: MetaData = {
+const template: BlogPost = {
   id: "",
-  _id: "",
 
   title: "",
   slug: "",
-  detail: "",
-  status: "",
-  banner: "",
+  summary: "",
 
   category: "",
   tags: [],
+
+  featured: false,
+  pinned: false,
+  status: "DRAFT",
+
+  banner: "",
+  thumbnail: "",
+
+  viewsCount: 0,
+  likesCount: 0,
+  commentsCount: 0,
+
+  authorId: "",
+
   sortIndex: 0,
 
   filename: "id" + ".mdx",
   pathname: "/blogs/" + "id" + ".mdx",
-  downloadURL: "downloadURL" ?? "",
+  downloadURL: "" ?? "",
 
-  createdAt: null,
-  updatedAt: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
   publishedAt: null,
+  archivedAt: null,
 };
 
-type Props = { content: string; data: MetaData };
+type Props = { content: string; data: BlogPost };
 
 export default function FormEditBlog({ content, data }: Props) {
   const router = useRouter();
   const ref: React.MutableRefObject<MDXEditorMethods | null> = useRef(null);
 
   const [editMetaData, setEditMetaData] = useState(false);
-  const [metaData, setMetaData] = useState<MetaData>({ ...template, ...data });
+  const [metaData, setMetaData] = useState<BlogPost>({ ...template, ...data });
 
   const handleSave = async () => {
     try {
@@ -68,7 +81,12 @@ export default function FormEditBlog({ content, data }: Props) {
         data.id + ".mdx"
       );
 
-      await updateDocument({ ...metaData, downloadURL: downloadURL ?? "" });
+      // await updateDocument({ ...metaData, downloadURL: downloadURL ?? "" });
+
+      const response = await UpdateBlogPost({
+        ...metaData,
+        downloadURL: downloadURL ?? "",
+      });
 
       toast.success("Post updated");
 
@@ -92,7 +110,14 @@ export default function FormEditBlog({ content, data }: Props) {
         data.id + ".mdx"
       );
 
-      await publishPost({ ...metaData, downloadURL: downloadURL ?? "" });
+      // await publishPost({ ...metaData, downloadURL: downloadURL ?? "" });
+      const response = await UpdateBlogPost(
+        {
+          ...metaData,
+          downloadURL: downloadURL ?? "",
+        },
+        true
+      );
 
       toast.success("Post Published");
 
@@ -102,13 +127,30 @@ export default function FormEditBlog({ content, data }: Props) {
     }
   };
 
+  // const handleMigrate = async () => {
+  //   try {
+  //     const { status } = await MigratePost(metaData);
+
+  //     if (status === "success") {
+  //       toast.success("Post Migrated Successfully");
+  //       router.push("/admin/blogs");
+  //     } else {
+  //       toast.error("Error Migrating Post");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error Migrating Post");
+  //   }
+  // };
+
   const handleDelete = async (event: FormEvent) => {
     event.preventDefault();
 
     if (confirm("Delete this blog?")) {
-      await deleteFile(data.pathname);
+      // await deleteFile(data.pathname);
 
       await deleteDocument(data?.id);
+
+      router.push("/admin/blogs");
     }
   };
 
@@ -135,11 +177,11 @@ export default function FormEditBlog({ content, data }: Props) {
         <Button onClick={handleSave} className="ml-auto">
           Save
         </Button>
-        {data?.status === "draft" ? (
+        {data?.status === "DRAFT" ? (
           <Button variant="default" onClick={handlePublish}>
             Publish
           </Button>
-        ) : data?.status === "published" ? (
+        ) : data?.status === "PUBLISHED" ? (
           <Button variant="secondary">Archive</Button>
         ) : null}
         <Button variant="outline" className="ml-auto">

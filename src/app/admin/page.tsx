@@ -19,9 +19,9 @@ export default async function AdminDashboard() {
       <div className="">
         <p className="nunito-sans text-3xl">
           <span>Blogs </span>
-          <span className="text-accent font-semibold">Dashboard</span>
+          <span className="text-sky-600 font-semibold">Dashboard</span>
         </p>
-        <p className="text-accent/80 font-extralight text-xl">Admin Panel</p>
+        <p className="text-sky-600/80 font-extralight text-xl">Admin Panel</p>
       </div>
       <div className="flex flex-wrap items-center gap-4">
         {items?.map((item, index) => (

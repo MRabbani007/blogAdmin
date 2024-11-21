@@ -1,4 +1,5 @@
 import FormEditBlog from "@/components/admin/FormEditBlog";
+import { getPostbySlug } from "@/lib/actions";
 import { getBlogByName } from "@/lib/firebase";
 import { notFound } from "next/navigation";
 
@@ -9,19 +10,11 @@ type Props = {
 export default async function EditBlogPage({ params }: Props) {
   if (!params.id) notFound();
 
-  const blog = await getBlogByName(decodeURIComponent(params.id));
-  // const handleSelect = (event: ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files) {
-  //     setFile(event.target.files[0]);
-  //   }
-  // };
+  const { status, metadata, rawMDX } = await getPostbySlug(
+    decodeURIComponent(params.id)
+  );
 
-  if (!blog) notFound();
-
-  const rawMDX = blog?.rawMDX;
-  const data = blog?.data;
-
-  if (!rawMDX && !data) notFound();
+  if (!metadata) notFound();
 
   return (
     <main>
@@ -32,10 +25,10 @@ export default async function EditBlogPage({ params }: Props) {
         </p>
         <p className="text-accent-80 font-extralight text-xl">Admin Panel</p>
       </div>
-      {blog && (
+      {metadata && (
         <FormEditBlog
           content={rawMDX ?? ""}
-          data={JSON.parse(JSON.stringify(data))}
+          data={JSON.parse(JSON.stringify(metadata))}
         />
       )}
     </main>

@@ -13,6 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
 import MetaDataPreview from "./MetaDataPreview";
 import { Button } from "../ui/button";
+import { CreateBlogPost } from "@/lib/actions";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
@@ -125,6 +126,17 @@ export default function FormCreateBlog() {
     }
   };
 
+  const handleCreate = async () => {
+    try {
+      const { status } = await CreateBlogPost(metaData);
+      if (status === "success") {
+        toast.success("Blog Created");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <BannerUpload metaData={metaData} setMetaData={setMetaData} />
@@ -139,6 +151,7 @@ export default function FormCreateBlog() {
           Import File
         </Button>
         <Button onClick={() => handleSave()}>Save Draft</Button>
+        <Button onClick={() => handleCreate()}>Create Post</Button>
       </div>
 
       <FormEditMetaData

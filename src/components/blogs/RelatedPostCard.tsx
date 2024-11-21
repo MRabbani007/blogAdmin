@@ -1,24 +1,23 @@
 import Image from "next/image";
 import React from "react";
-import { MetaData } from "../../../types";
+import { BlogPost } from "@prisma/client";
 
 interface Props {
-  blog: MetaData;
+  blog: BlogPost;
 }
 
 export default function RelatedPostCard({ blog }: Props) {
   return (
-    <div className="shadow-md shadow-zinc-200 rounded-lg">
-      <div className="min-w-32">
+    <div className="shadow-md shadow-zinc-200 rounded-lg overflow-clip shrink-0">
+      <div className="w-[300px] h-[200px] relative">
         <Image
           src={blog.banner ?? "/post_icon.png"}
           alt="banner"
-          width={1920}
-          height={1080}
-          className="w-full h-full"
+          fill
+          className="object-cover object-center"
         />
       </div>
-      <div className="p-2">{blog.title}</div>
+      <div className="p-2 text-ellipsis">{blog.title}</div>
     </div>
   );
 }

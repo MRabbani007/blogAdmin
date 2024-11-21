@@ -7,22 +7,20 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { CATEGORIES, STATUS, TAGS } from "@/lib/data";
+import { CATEGORIES } from "@/lib/data";
 import { MetaData } from "../../../types";
 import FormContainer from "../ui/FormContainer";
 import { BiCheck, BiX } from "react-icons/bi";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
-import { useForm } from "@conform-to/react";
 import { useFormState } from "react-dom";
-import { parseWithZod } from "@conform-to/zod";
-import { blogSchema } from "@/lib/zodSchemas";
-import { CreateBlog } from "@/lib/actions";
+import { BlogPost } from "@prisma/client";
+import { Button } from "../ui/button";
 
 interface Props {
-  metaData: MetaData;
-  setMetaData: Dispatch<SetStateAction<MetaData>>;
+  metaData: BlogPost;
+  setMetaData: Dispatch<SetStateAction<BlogPost>>;
   showForm: boolean;
   setShowForm: Dispatch<SetStateAction<boolean>>;
 }
@@ -36,7 +34,7 @@ export default function FormEditMetaData({
   const [state, setState] = useState(metaData);
   const [tag, setTag] = useState<string>("");
 
-  const [lastResult, action] = useFormState(CreateBlog, undefined);
+  // const [lastResult, action] = useFormState(CreateBlog, undefined);
   // const [form, fields] = useForm({
   //   lastResult,
   //   onValidate({ formData }) {
@@ -127,28 +125,41 @@ export default function FormEditMetaData({
         />
       </div> */}
       {/* Sort Index */}
-      <div className="field">
-        <Label htmlFor="sortIndex">sortIndex</Label>
-        <Input
-          type="number"
-          min={0}
-          step={1}
-          placeholder="sortIndex"
-          id="sortIndex"
-          name="sortIndex"
-          value={state?.sortIndex || 0}
-          onChange={onChange}
-        />
+      <div className="flex items-center justify-start gap-4">
+        <div className="field">
+          <Label htmlFor="sortIndex">sortIndex</Label>
+          <Input
+            type="number"
+            min={0}
+            step={1}
+            placeholder="sortIndex"
+            id="sortIndex"
+            name="sortIndex"
+            value={state?.sortIndex || 0}
+            onChange={onChange}
+          />
+        </div>
+        <div className="flex items-center gap-2 w-fit text-zinc-800">
+          <Input
+            type="checkbox"
+            id="pinned"
+            checked={state?.pinned ?? false}
+            onChange={() =>
+              setState((curr) => ({ ...curr, pinned: !curr.pinned }))
+            }
+          />
+          <Label htmlFor="pinned">Pinned</Label>
+        </div>
       </div>
       {/* Detail */}
       <div className="field">
-        <Label htmlFor="detail">Detail</Label>
+        <Label htmlFor="summary">Summary</Label>
         <Input
           type="text"
-          placeholder="detail"
-          id="detail"
-          name="detail"
-          value={state?.detail || ""}
+          placeholder="summary"
+          id="summary"
+          name="summary"
+          value={state?.summary || ""}
           onChange={onChange}
         />
       </div>
@@ -172,31 +183,41 @@ export default function FormEditMetaData({
       {/* Tags */}
       <div className="field">
         <p>Tags</p>
-        <div className="flex items-center gap-2">
-          <Input
-            type="text"
-            placeholder="Enter New Tag"
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
-            className="field_input"
-          />
-          <button type="button" onClick={handleAddTag}>
-            <BiCheck size={30} />
-          </button>
-          <button type="button">
-            <BiX size={30} />
-          </button>
+        <div>
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder="Enter New Tag"
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              className="field_input"
+            />
+            <Button
+              variant="outline"
+              type="button"
+              onClick={handleAddTag}
+              className="p-1"
+            >
+              <BiCheck size={30} />
+            </Button>
+            <Button type="button" className="p-1" variant="outline">
+              <BiX size={30} />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            {state.tags.map((tag, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 rounded-full bg-zinc-200 py-1 px-2"
+              >
+                <span>{`#${tag}`}</span>
+                <button type="button" onClick={() => handleRemoveTag(idx)}>
+                  <BiX size={24} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        <ul className="flex items-center gap-2">
-          {state.tags.map((tag, idx) => (
-            <li key={idx} className="flex items-center gap-2">
-              <span>{`#${tag}`}</span>
-              <button type="button" onClick={() => handleRemoveTag(idx)}>
-                <BiX size={24} />
-              </button>
-            </li>
-          ))}
-        </ul>
       </div>
       {/* Status */}
       {/* <div className="field">

@@ -1,5 +1,3 @@
-import RelatedPosts from "@/components/blogs/RelatedPosts";
-import { getBlogByName } from "@/lib/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,7 +5,8 @@ import React from "react";
 import { IoArrowBack } from "react-icons/io5";
 import "highlight.js/styles/github.css";
 import { extractMdx } from "@/lib/mdx";
-import { genDate } from "@/lib/date";
+import { getPostbySlug } from "@/lib/actions";
+import RelatedPosts from "@/components/blogs/RelatedPosts";
 
 interface Params {
   params: {
@@ -19,23 +18,24 @@ interface Params {
 export default async function PostPage({ params }: Params) {
   if (!params.slug) notFound();
 
-  const blog = await getBlogByName(decodeURIComponent(params.slug));
+  const { status, metadata, rawMDX } = await getPostbySlug(
+    decodeURIComponent(params.slug)
+  );
 
-  const rawMDX = blog?.rawMDX;
-  const data = blog?.data;
+  if (!rawMDX || !metadata) {
+    notFound();
+  }
 
-  if (!rawMDX || !data) notFound();
-
-  const { content } = await extractMdx(rawMDX);
+  const { content } = await extractMdx(rawMDX ?? "");
 
   return (
     <>
-      <main className="mx-auto p-0">
-        {data?.banner && (
-          <div className="overflow-y-hidden relative h-[60vh] w-full max-w-[1024px] mx-auto overflow-hidden">
+      <main className="p-4 lg:px-8 max-w-[1024px] flex-1">
+        {metadata?.banner && (
+          <div className="overflow-y-hidden relative h-[60vh] w-full  mx-auto overflow-hidden">
             <Image
               alt="banner"
-              src={data.banner}
+              src={metadata.banner}
               width={1000}
               height={800}
               className={
@@ -44,7 +44,7 @@ export default async function PostPage({ params }: Params) {
             />
           </div>
         )}
-        <div className="max-w-[1024px] mx-auto">
+        <div className="">
           <header className="flex items-stretch gap-4 my-4 ">
             <div className="h-20 w-20">
               <Image
@@ -56,19 +56,19 @@ export default async function PostPage({ params }: Params) {
               />
             </div>
             <div>
-              <h1 className="font-extrabold text-4xl">{data?.title}</h1>
+              <h1 className="font-extrabold text-4xl">{metadata?.title}</h1>
               <p className="flex items-center gap-2">
                 <span>Mohamad</span>
                 <span>-</span>
                 <span>Published</span>
                 <span className="text-zinc-700 dark:text-zinc-300">
-                  {genDate(data?.publishedAt)}
+                  {metadata?.publishedAt?.toDateString()}
                 </span>
                 <span>Last Updated</span>
-                <span>{genDate(data?.updatedAt)}</span>
+                <span>{metadata?.updatedAt.toDateString()}</span>
               </p>
               <p className="flex items-center gap-4 text-sm mt-4">
-                {data?.tags.map((tag, idx) => (
+                {metadata?.tags.map((tag, idx) => (
                   <span
                     key={idx}
                     className="py-2 px-4 bg-zinc-300 dark:bg-zinc-800"
@@ -80,12 +80,13 @@ export default async function PostPage({ params }: Params) {
           <div className="flex-1 prose lg:prose-xl dark:prose-invert ">
             {content}
           </div>
-          <hr />
+          <hr className="my-4" />
+          <RelatedPosts slug={params.slug} />
+          <hr className="my-4" />
           <Link href="/" className="flex items-center gap-2">
             <IoArrowBack size={30} />
             <span>Go back</span>
           </Link>
-          <RelatedPosts params={params} />
         </div>
       </main>
     </>

@@ -3,13 +3,13 @@
 import { uploadFile } from "@/lib/firebase";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { MetaData } from "../../../types";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { BlogPost } from "@prisma/client";
 
 interface Props {
-  metaData: MetaData;
-  setMetaData: Dispatch<SetStateAction<MetaData>>;
+  metaData: BlogPost;
+  setMetaData: Dispatch<SetStateAction<BlogPost>>;
 }
 
 const allowedTypes = ["png", "jpg", "jpeg"];

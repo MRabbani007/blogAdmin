@@ -1,11 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { MetaData } from "../../../types";
-import { CiEdit } from "react-icons/ci";
-import Link from "next/link";
-import { Button } from "../ui/button";
+import { BlogPost } from "@prisma/client";
 
 interface Props {
-  metaData: MetaData;
+  metaData: BlogPost;
   setEditMetaData: Dispatch<SetStateAction<boolean>>;
 }
 export default function MetaDataPreview({ metaData, setEditMetaData }: Props) {
