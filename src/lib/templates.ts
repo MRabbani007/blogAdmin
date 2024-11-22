@@ -29,6 +29,8 @@ export const POST_TEMPLATE: BlogPost = {
   pathname: "/blogs/" + "id" + ".mdx",
   downloadURL: "",
 
+  relatedPosts: [],
+
   createdAt: new Date(),
   updatedAt: new Date(),
   publishedAt: null,
