@@ -69,11 +69,6 @@
   margin: 0;
 }
 
-input {
-  outline: none;
-  border: none;
-}
-
 .nunito-sans {
   font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
@@ -86,11 +81,13 @@ input {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-  .field_input {
-    @apply bg-zinc-800;
+
+  main {
+    @apply flex flex-1 flex-col p-4;
   }
 }
 
@@ -102,44 +99,4 @@ input {
   /* body {
     @apply min-h-screen;
   } */
-}
-
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex: 1 1 0%;
-  padding: 1rem;
-}
-
-.field {
-  display: grid;
-  grid-template-columns: 20% 1fr;
-  align-items: center;
-  gap: 1rem;
-}
-
-.field_input {
-  border: none;
-  outline: none;
-  flex: 1 1 0%;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-}
-
-.field_input option {
-  padding: 0.5rem 1rem;
-}
-
-.field_label {
-  font-weight: 600;
-}
-
-td,
-th {
-  padding: 0.5rem 1rem;
-}
-
-thead tr {
-  background-color: #333333;
 }

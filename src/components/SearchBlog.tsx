@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
-export default function SearchBlog() {
+export default function SearchBlog({ className }: { className?: string }) {
   const router = useRouter();
   const params = useParams();
 
@@ -24,7 +24,10 @@ export default function SearchBlog() {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex items-center gap-4 py-2 px-4 bg-zinc-100 dark:bg-zinc-900 rounded-lg"
+      className={
+        "flex items-center gap-4 py-2 px-4 bg-zinc-100 dark:bg-zinc-900 rounded-lg " +
+        className
+      }
     >
       <input
         type="text"

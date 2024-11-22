@@ -5,10 +5,6 @@ import React from "react";
 import "react-markdown-editor-lite/lib/index.css";
 
 export default function CreateBlog() {
-  // function handleEditorChange({ html, text }: { html: string; text: string }) {
-  //   console.log("handleEditorChange", html, text);
-  // }
-
   return (
     <main>
       <div className="">

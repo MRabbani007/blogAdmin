@@ -7,7 +7,6 @@ import { siteSchema } from "./zodSchemas";
 import { BlogPost, Prisma } from "@prisma/client";
 import prisma from "./db";
 import { revalidatePath } from "next/cache";
-import { MetaData } from "../../types";
 import { ITEMS_PER_PAGE } from "./data";
 import { getBytes, ref } from "firebase/storage";
 import { storage } from "./firebase";
@@ -28,42 +27,44 @@ export async function CreateSiteAction(formData: FormData) {
   }
 }
 
-export async function CreateBlogPost(document: MetaData) {
+export async function CreateBlogPost(document: BlogPost) {
   try {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
     if (!user) return redirect("/");
 
-    console.log(document);
+    const publishedAt = document?.publishedAt
+      ? new Date(document.publishedAt)
+      : null;
 
     const response = await prisma.blogPost.create({
       data: {
+        id: document.id,
         title: document.title,
         slug: document.slug,
-        summary: document.detail ?? "",
+        summary: document.summary ?? "",
 
         category: document?.category ?? "",
         tags: document.tags ?? [],
 
-        status:
-          document.status === "Published"
-            ? "PUBLISHED"
-            : document.status === "Archived"
-            ? "ARCHIVED"
-            : "DRAFT",
+        status: document.status,
 
         authorId: user.id,
 
-        featured: false,
+        featured: document.featured ?? false,
         pinned: document.pinned ?? false,
 
-        sortIndex: document.sortIndex,
+        sortIndex: parseInt(document.sortIndex?.toString() ?? "0"),
         banner: document.banner,
 
+        filename: document.filename,
         downloadURL: document.downloadURL,
+
+        publishedAt,
       },
     });
+
     return { status: "success" };
   } catch (error) {
     console.log(error);
@@ -180,15 +181,18 @@ type Filters = {
   status?: string;
 };
 
+// TODO: update pinned posts flag to featured posts
 export async function getBlogPosts({
   page,
   search,
   featured,
+  category,
   status = "PUBLISHED",
 }: {
   page: number;
   featured?: boolean;
   search?: string;
+  category?: string;
   status?: string;
 }) {
   const query: Prisma.BlogPostWhereInput = {};
@@ -201,6 +205,9 @@ export async function getBlogPosts({
   }
   if (search) {
     query.title = { contains: search, mode: "insensitive" };
+  }
+  if (category) {
+    query.category = category;
   }
   if (featured === true) {
     query.pinned = true;

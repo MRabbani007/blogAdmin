@@ -17,6 +17,15 @@ import { Input } from "../ui/input";
 import { useFormState } from "react-dom";
 import { BlogPost } from "@prisma/client";
 import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { SelectContent } from "@radix-ui/react-select";
 
 interface Props {
   metaData: BlogPost;
@@ -53,7 +62,9 @@ export default function FormEditMetaData({
   }, [metaData]);
 
   const onChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     setState((curr) => {
       return { ...curr, [event.target.name]: event.target.value };
@@ -101,7 +112,7 @@ export default function FormEditMetaData({
       setShowForm={setShowForm}
     >
       {/* Title */}
-      <div className="field">
+      <div className="">
         <Label htmlFor="title">Title</Label>
         <Input
           type="text"
@@ -112,8 +123,8 @@ export default function FormEditMetaData({
           onChange={onChange}
         />
       </div>
-      {/* Slug */}
-      {/* <div className="field">
+      {/* Slug  */}
+      <div className="">
         <Label htmlFor="slug">Slug</Label>
         <Input
           type="text"
@@ -123,11 +134,13 @@ export default function FormEditMetaData({
           value={state?.slug}
           disabled
         />
-      </div> */}
+      </div>
       {/* Sort Index */}
-      <div className="flex items-center justify-start gap-4">
-        <div className="field">
-          <Label htmlFor="sortIndex">sortIndex</Label>
+      <div className="flex items-start justify-start gap-4">
+        <div className="">
+          <Label htmlFor="sortIndex" className="text-nowrap">
+            Sort Index
+          </Label>
           <Input
             type="number"
             min={0}
@@ -139,24 +152,43 @@ export default function FormEditMetaData({
             onChange={onChange}
           />
         </div>
-        <div className="flex items-center gap-2 w-fit text-zinc-800">
-          <Input
-            type="checkbox"
-            id="pinned"
-            checked={state?.pinned ?? false}
-            onChange={() =>
-              setState((curr) => ({ ...curr, pinned: !curr.pinned }))
-            }
-          />
-          <Label htmlFor="pinned">Pinned</Label>
+        <div>
+          <Label>Flags</Label>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 text-zinc-800">
+              <Input
+                type="checkbox"
+                id="featured"
+                className="w-fit"
+                checked={state?.featured ?? false}
+                onChange={() =>
+                  setState((curr) => ({ ...curr, featured: !curr.featured }))
+                }
+              />
+              <Label htmlFor="featured" className="block relative">
+                Featured
+              </Label>
+            </div>
+            <div className="flex items-center gap-2  text-zinc-800">
+              <Input
+                type="checkbox"
+                id="pinned"
+                className="w-fit"
+                checked={state?.pinned ?? false}
+                onChange={() =>
+                  setState((curr) => ({ ...curr, pinned: !curr.pinned }))
+                }
+              />
+              <Label htmlFor="pinned">Pinned</Label>
+            </div>
+          </div>
         </div>
       </div>
-      {/* Detail */}
-      <div className="field">
+      {/* Summary */}
+      <div className="">
         <Label htmlFor="summary">Summary</Label>
-        <Input
-          type="text"
-          placeholder="summary"
+        <Textarea
+          placeholder="Summary for blog post"
           id="summary"
           name="summary"
           value={state?.summary || ""}
@@ -164,26 +196,31 @@ export default function FormEditMetaData({
         />
       </div>
       {/* Category */}
-      <div className="field">
+      <div className="">
         <Label htmlFor="category">Category</Label>
-        <select
+        <Select
           name="category"
-          id="category"
           value={state?.category || ""}
-          onChange={onChange}
+          onValueChange={(value) =>
+            setState((curr) => ({ ...curr, category: value }))
+          }
         >
-          <option value="">Select</option>
-          {CATEGORIES.map((item, index) => (
-            <option value={item.value} key={index}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {CATEGORIES.map((item, index) => (
+              <SelectItem value={item.value} key={index}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       {/* Tags */}
-      <div className="field">
+      <div className="">
         <p>Tags</p>
-        <div>
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Input
               type="text"
@@ -204,7 +241,7 @@ export default function FormEditMetaData({
               <BiX size={30} />
             </Button>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {state.tags.map((tag, idx) => (
               <div
                 key={idx}

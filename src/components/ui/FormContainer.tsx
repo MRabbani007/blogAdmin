@@ -43,7 +43,12 @@ export default function FormContainer({
     setShowForm(false);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    document.body.style.overflow = showForm ? "hidden" : "scroll";
+    return () => {
+      document.body.style.overflow = "scroll";
+    };
+  }, [showForm]);
 
   return (
     <>

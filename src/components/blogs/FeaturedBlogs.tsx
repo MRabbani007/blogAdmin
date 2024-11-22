@@ -14,7 +14,7 @@ import { FaComment } from "react-icons/fa6";
 import Link from "next/link";
 
 export default async function FeaturedBlogs() {
-  const { data } = await getBlogPosts({ page: 1 });
+  const { data } = await getBlogPosts({ page: 1, featured: true });
   return (
     <div>
       <div className="text-4xl font-semibold text-zinc-900 mx-4">
@@ -25,7 +25,7 @@ export default async function FeaturedBlogs() {
           {data.map((post, idx) => (
             <CarouselItem key={idx} className="">
               <div className="flex items-stretch m-4 rounded-lg overflow-clip shadow-md shadow-zinc-800">
-                <div className="w-[300px] h-[200px] relative">
+                <div className="h-full w-auto min-w-[300px] min-h-[200px] relative">
                   <Image
                     src={post.banner ?? "/blog.png"}
                     alt="banner"
@@ -47,7 +47,7 @@ export default async function FeaturedBlogs() {
                   </div>
                   <div className="flex-1 flex flex-col">
                     <p className="text-3xl font-semibold">{post.title}</p>
-                    <p>{post.summary}</p>
+                    <p className="line-clamp-2">{post.summary}</p>
                   </div>
                   <div className="flex items-center gap-4 mt-auto">
                     <p className="flex items-center text-zinc-500 gap-2">

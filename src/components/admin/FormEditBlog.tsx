@@ -3,13 +3,7 @@
 import dynamic from "next/dynamic";
 import React, { FormEvent, Suspense, useRef, useState } from "react";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import {
-  deleteDocument,
-  deleteFile,
-  publishPost,
-  updateDocument,
-  uploadFile,
-} from "@/lib/firebase";
+import { deleteDocument, uploadFile } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
@@ -18,45 +12,11 @@ import MetaDataPreview from "./MetaDataPreview";
 import { Button } from "../ui/button";
 import { UpdateBlogPost } from "@/lib/actions";
 import { BlogPost } from "@prisma/client";
+import { POST_TEMPLATE } from "@/lib/templates";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
 });
-
-const template: BlogPost = {
-  id: "",
-
-  title: "",
-  slug: "",
-  summary: "",
-
-  category: "",
-  tags: [],
-
-  featured: false,
-  pinned: false,
-  status: "DRAFT",
-
-  banner: "",
-  thumbnail: "",
-
-  viewsCount: 0,
-  likesCount: 0,
-  commentsCount: 0,
-
-  authorId: "",
-
-  sortIndex: 0,
-
-  filename: "id" + ".mdx",
-  pathname: "/blogs/" + "id" + ".mdx",
-  downloadURL: "" ?? "",
-
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  publishedAt: null,
-  archivedAt: null,
-};
 
 type Props = { content: string; data: BlogPost };
 
@@ -65,7 +25,10 @@ export default function FormEditBlog({ content, data }: Props) {
   const ref: React.MutableRefObject<MDXEditorMethods | null> = useRef(null);
 
   const [editMetaData, setEditMetaData] = useState(false);
-  const [metaData, setMetaData] = useState<BlogPost>({ ...template, ...data });
+  const [metaData, setMetaData] = useState<BlogPost>({
+    ...POST_TEMPLATE,
+    ...data,
+  });
 
   const handleSave = async () => {
     try {

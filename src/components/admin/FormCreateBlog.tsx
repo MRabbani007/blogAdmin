@@ -5,8 +5,6 @@ import FormUploadFile from "../FormUploadFile";
 import { createDoc, uploadFile } from "@/lib/firebase";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { useRouter } from "next/navigation";
-import { MetaData } from "../../../types";
-import { CiEdit } from "react-icons/ci";
 import FormEditMetaData from "./FormEditMetaData";
 import BannerUpload from "./BannerUpload";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,31 +12,12 @@ import dynamic from "next/dynamic";
 import MetaDataPreview from "./MetaDataPreview";
 import { Button } from "../ui/button";
 import { CreateBlogPost } from "@/lib/actions";
+import { POST_TEMPLATE } from "@/lib/templates";
+import { BlogPost } from "@prisma/client";
 
 const EditorComponent = dynamic(() => import("../EditorComponent"), {
   ssr: false,
 });
-
-const template: MetaData = {
-  id: "",
-  _id: "",
-
-  title: "",
-  slug: "",
-  detail: "",
-  status: "draft",
-
-  category: "",
-  tags: [],
-
-  filename: ".mdx",
-  pathname: "/blogs/" + "id" + ".mdx",
-  downloadURL: "downloadURL" ?? "",
-
-  createdAt: null,
-  updatedAt: null,
-  publishedAt: null,
-};
 
 export default function FormCreateBlog() {
   const router = useRouter();
@@ -54,28 +33,9 @@ export default function FormCreateBlog() {
     }
   };
 
-  const [metaData, setMetaData] = useState<MetaData>(() => {
+  const [metaData, setMetaData] = useState<BlogPost>(() => {
     const id = crypto.randomUUID();
-    return {
-      id,
-      _id: "",
-
-      title: "",
-      slug: "",
-      detail: "",
-      status: "draft",
-
-      category: "",
-      tags: [],
-
-      filename: id + ".mdx",
-      pathname: "/blogs/" + id + ".mdx",
-      downloadURL: "",
-
-      createdAt: null,
-      updatedAt: null,
-      publishedAt: null,
-    };
+    return { ...POST_TEMPLATE, id, filename: id + ".mdx" };
   });
 
   // const [description, setDescription] = useState("");
@@ -94,7 +54,7 @@ export default function FormCreateBlog() {
     }
   }, [file]);
 
-  const handleSave = async () => {
+  const handleSave = async (status: "DRAFT" | "PUBLISHED") => {
     try {
       if (metaData.slug === "") {
         alert("Please provide title for this post");
@@ -110,17 +70,21 @@ export default function FormCreateBlog() {
       const { downloadURL } = await uploadFile(
         newBlogFile,
         "/blogs/",
-        metaData.filename
+        metaData.filename ?? ""
       );
 
-      await createDoc("blogs", {
+      const { status: response } = await CreateBlogPost({
         ...metaData,
+        status,
         downloadURL: downloadURL ?? "",
       });
 
-      toast.success("Blog created");
-
-      router.push("/admin/blogs");
+      if (response === "success") {
+        toast.success("Blog created");
+        router.push("/admin/blogs");
+      } else {
+        toast.error("Error Saving Post");
+      }
     } catch (error) {
       toast.error("Error Saving Post");
     }
@@ -128,10 +92,10 @@ export default function FormCreateBlog() {
 
   const handleCreate = async () => {
     try {
-      const { status } = await CreateBlogPost(metaData);
-      if (status === "success") {
-        toast.success("Blog Created");
-      }
+      // const { status } = await CreateBlogPost(metaData);
+      // if (status === "success") {
+      //   toast.success("Blog Created");
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -150,10 +114,9 @@ export default function FormCreateBlog() {
         <Button variant="secondary" onClick={() => setShowForm(true)}>
           Import File
         </Button>
-        <Button onClick={() => handleSave()}>Save Draft</Button>
-        <Button onClick={() => handleCreate()}>Create Post</Button>
+        <Button onClick={() => handleSave("DRAFT")}>Save Draft</Button>
+        <Button onClick={() => handleSave("PUBLISHED")}>Create Post</Button>
       </div>
-
       <FormEditMetaData
         metaData={metaData}
         setMetaData={setMetaData}
