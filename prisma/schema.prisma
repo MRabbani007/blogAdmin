@@ -201,3 +201,17 @@ enum UserRole {
   AUTHOR
   ADMIN
 }
+
+model Visitor {
+  id               String    @id @default(uuid()) @map("_id")
+  visitorId        String // Unique ID per visitor (from localStorage)
+  userAgent        String
+  language         String
+  platform         String
+  screenResolution String
+  timezone         String
+  referrer         String?
+  visitDate        DateTime
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+}

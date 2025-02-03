@@ -4,7 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { BsPostcard } from "react-icons/bs";
-import { IoHome, IoSettingsOutline } from "react-icons/io5";
+import {
+  IoHome,
+  IoSettingsOutline,
+  IoStatsChartOutline,
+} from "react-icons/io5";
 import { MdOutlineAddPhotoAlternate, MdOutlinePending } from "react-icons/md";
 
 const items = [
@@ -19,6 +23,11 @@ const items = [
     label: "Pending",
     url: "/admin/draft",
     icon: <MdOutlinePending size={30} />,
+  },
+  {
+    label: "Statistics",
+    url: "/admin/statistics",
+    icon: <IoStatsChartOutline size={30} />,
   },
   {
     label: "Settings",

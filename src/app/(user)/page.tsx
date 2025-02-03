@@ -18,8 +18,6 @@ export default async function Home({
 
   const { count, data: blogs } = await getBlogPosts({ page, search, category });
 
-  console.log(category);
-
   return (
     <main className="max-w-[1024px] min-w-[1024px] w-full mx-auto gap-4">
       {/* <form className="flex items-center gap-4 border-2 border-zinc-800 rounded-lg py-2 px-4">

@@ -22,7 +22,7 @@ export default async function BlogsPage({ searchParams }: Props) {
   });
 
   return (
-    <main className="flex-1">
+    <main>
       <header className="">
         <p className="nunito-sans text-3xl">
           <span className="text-sky-600 font-semibold">Published </span>
@@ -30,7 +30,7 @@ export default async function BlogsPage({ searchParams }: Props) {
         </p>
         <p className="text-sky-600/80 font-extralight text-xl">Admin Panel</p>
       </header>
-      <SearchBlog className="my-4" />
+      <SearchBlog />
       <div className="flex-1 space-y-4">
         {data &&
           data.map((blog, idx) => (

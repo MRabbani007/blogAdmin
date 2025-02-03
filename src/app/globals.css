@@ -87,7 +87,7 @@
   }
 
   main {
-    @apply flex flex-1 flex-col p-4;
+    @apply flex flex-1 flex-col p-4 gap-4;
   }
 }
 

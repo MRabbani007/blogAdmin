@@ -1,7 +1,5 @@
 import React from "react";
 import RelatedPostCard from "./RelatedPostCard";
-import { notFound } from "next/navigation";
-import { getBlogByName } from "@/lib/firebase";
 import { getRelatedPosts } from "@/lib/actions";
 
 interface Props {
