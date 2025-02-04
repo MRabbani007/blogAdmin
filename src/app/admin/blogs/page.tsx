@@ -31,7 +31,7 @@ export default async function BlogsPage({ searchParams }: Props) {
         <p className="text-sky-600/80 font-extralight text-xl">Admin Panel</p>
       </header>
       <SearchBlog />
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 flex flex-col gap-6">
         {data &&
           data.map((blog, idx) => (
             <DashboardBlogPostCard

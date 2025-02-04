@@ -30,7 +30,8 @@ export default async function Navbar() {
   const session = await getUser();
 
   return (
-    <div className="w-full flex items-center justify-between gap-4 p-4">
+    <nav className="w-full flex items-center justify-between gap-4 py-2 px-4 bg-zinc-300 dark:bg-black">
+      {/* Left Logo */}
       <div>
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -38,11 +39,12 @@ export default async function Navbar() {
             width={512}
             height={512}
             alt="Logo"
-            className="w-10"
+            className="size-8"
           />
-          <span className="font-extrabold text-3xl ">Blog</span>
+          <span className="font-bold text-2xl">Blog</span>
         </Link>
       </div>
+      {/* Right User */}
       <div className="flex items-center gap-4">
         {session ? (
           <>
@@ -64,7 +66,7 @@ export default async function Navbar() {
         )}
         <ThemeToggle />
       </div>
-    </div>
+    </nav>
   );
 }
 

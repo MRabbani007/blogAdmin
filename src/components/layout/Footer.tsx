@@ -16,8 +16,6 @@ export default function Footer() {
         <span className="font-extrabold text-3xl ">Blog</span>
       </Link>
       <div className="flex flex-col gap-2">
-        <span className="">Links</span>
-        <Link href="/">Homepage</Link>
         <Link href="/">Blog</Link>
         <Link href="/">About</Link>
         <Link href="/">Contact</Link>

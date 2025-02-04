@@ -17,9 +17,7 @@ export default async function FeaturedBlogs() {
   const { data } = await getBlogPosts({ page: 1, featured: true });
   return (
     <div>
-      <div className="text-4xl font-semibold text-zinc-900 mx-4">
-        Featured Posts
-      </div>
+      <div className="text-4xl font-semibold mx-4">Featured Posts</div>
       <Carousel className="w-full group">
         <CarouselContent>
           {data.map((post, idx) => (
@@ -41,7 +39,7 @@ export default async function FeaturedBlogs() {
                         {post.publishedAt?.toISOString().substring(0, 10)}
                       </span>
                     </p>
-                    <p className="py-1 px-2 bg-zinc-300 rounded-full text-xs font-medium">
+                    <p className="py-1 px-2 bg-zinc-300 dark:text-zinc-900 rounded-full text-xs font-medium">
                       {post.category}
                     </p>
                   </div>

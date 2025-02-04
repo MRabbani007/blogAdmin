@@ -32,14 +32,16 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
               {/* <span title="SortIndex">{blog.sortIndex}</span> */}
               <Link href={`/admin/blogs/${blog.slug}`}>{blog.title}</Link>
             </p>
-            <p
-              title={"Category: " + blog?.category}
-              className="bg-zinc-200 py-2 px-4 text-sm rounded-full"
-            >
-              {blog?.category}
-            </p>
+            {blog?.category && (
+              <p
+                title={"Category: " + blog?.category}
+                className="bg-zinc-200 text-zinc-900 py-1 px-4 text-sm rounded-full"
+              >
+                {blog?.category}
+              </p>
+            )}
           </div>
-          <p className="text-sm font-light flex items-center gap-2">
+          <p className="text-sm dark:text-zinc-500 font-light flex items-center gap-2">
             <span>Created: </span>
             <span title="Created">
               {blog?.createdAt.toString().substring(0, 10)}
@@ -53,7 +55,7 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
               {blog?.publishedAt?.toString().substring(0, 10)}
             </span>
           </p>
-          <p className="line-clamp-3 my-2">{blog.summary}</p>
+          <p className="line-clamp-3 my-2 dark:text-zinc-400">{blog.summary}</p>
         </div>
         <div className="flex items-center justify-between gap-4">
           {/* <span className="mr-2">Status: {blog.status}</span> */}
@@ -61,7 +63,7 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
             {blog.tags.map((tag, idx) => (
               <span
                 key={idx}
-                className="py-1 px-4 bg-zinc-200 text-sm rounded-full"
+                className="py-1 px-4 bg-zinc-200 text-zinc-900 text-sm rounded-full"
               >
                 {`#${tag}`}
               </span>
@@ -69,7 +71,7 @@ export default function DashboardBlogPostCard({ blog, idx }: Params) {
           </div>
           <div
             title={"Status: " + blog?.status}
-            className="flex items-center gap-2 bg-zinc-200 p-2 text-sm rounded-md"
+            className="flex items-center gap-2 text-zinc-400 p-2 text-sm rounded-md"
           >
             {blog?.status === "PUBLISHED" ? (
               <IoMdCheckmarkCircleOutline size={20} />

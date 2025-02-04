@@ -47,11 +47,23 @@ export async function recordVisitor(visitorInfo: VisitorInfo) {
   }
 }
 
-export async function getAllVisitors() {
+export async function getAllVisitors(
+  page: number = 1,
+  limit: number = 10,
+  sortOrder: "asc" | "desc" = "desc"
+) {
   try {
-    const data = await prisma.visitor.findMany();
+    const skip = (page - 1) * limit;
 
-    return { success: true, data };
+    const data = await prisma.visitor.findMany({
+      skip,
+      take: limit,
+      orderBy: { visitDate: sortOrder }, // ✅ Sorting by visit date
+    });
+
+    const count = await prisma.visitor.count();
+
+    return { success: true, data, count };
   } catch (error) {
     console.error("Error fetching visitor:", error);
     return { success: false, message: "Failed to fetch visitor data" };
