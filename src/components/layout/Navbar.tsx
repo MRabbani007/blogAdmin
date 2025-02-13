@@ -23,6 +23,7 @@ import {
   IoLogOutOutline,
   IoSettingsOutline,
 } from "react-icons/io5";
+import { GiFeather } from "react-icons/gi";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -30,17 +31,18 @@ export default async function Navbar() {
   const session = await getUser();
 
   return (
-    <nav className="w-full flex items-center justify-between gap-4 py-2 px-4 bg-zinc-300 dark:bg-black">
+    <nav className="w-full flex items-center justify-between gap-4 py-2 px-4 bg-sky-950/40 dark:bg-sky-950">
       {/* Left Logo */}
       <div>
         <Link href="/" className="flex items-center gap-2">
-          <Image
+          {/* <Image
             src="/logo.png"
             width={512}
             height={512}
             alt="Logo"
             className="size-8"
-          />
+          /> */}
+          <GiFeather size={30} />
           <span className="font-bold text-2xl">Blog</span>
         </Link>
       </div>
@@ -48,8 +50,8 @@ export default async function Navbar() {
       <div className="flex items-center gap-4">
         {session ? (
           <>
-            <button className="text-yellow-500">
-              <FaBell size={30} />
+            <button className="">
+              <FaBell size={20} />
             </button>
             <UserDropDown />
           </>

@@ -1,18 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { GiFeather } from "react-icons/gi";
 
 export default function Footer() {
   return (
-    <div className="border-t-2 border-zinc-500 p-4 flex items-start justify-between gap-6">
+    <div className=" bg-sky-950/40 dark:bg-sky-950 p-4 lg:px-8 flex items-start justify-between gap-6">
       <Link href="/" className="flex items-center gap-2">
-        <Image
+        {/* <Image
           src="/logo.png"
           width={512}
           height={512}
           alt="Logo"
           className="w-10"
-        />
+        /> */}
+        <GiFeather size={30} />
         <span className="font-extrabold text-3xl ">Blog</span>
       </Link>
       <div className="flex flex-col gap-2">

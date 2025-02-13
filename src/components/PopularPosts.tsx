@@ -14,7 +14,7 @@ export default async function PopularPosts() {
         {data.map((post) => (
           <div
             key={post.id}
-            className="flex items-stretch gap-2 hover:bg-zinc-100 duration-200 p-2"
+            className="flex items-stretch gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md duration-200 p-2"
           >
             <div className="relative w-[180px] h-[100px]">
               <Image

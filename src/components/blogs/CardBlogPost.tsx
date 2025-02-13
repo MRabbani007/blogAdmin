@@ -10,8 +10,8 @@ interface Props {
 
 export default function CardBlogPost({ blog }: Props) {
   return (
-    <div className="flex items-stretch gap-4">
-      <div className="w-[300px] h-[180px] relative rounded-lg overflow-clip">
+    <div className="flex items-stretch gap-4 bg-cyan-900/20 dark:bg-zinc-800 rounded-lg overflow-clip">
+      <div className="w-[300px] h-[180px] relative overflow-clip">
         <Image
           src={blog?.banner ?? "/post_icon.png"}
           alt="blog"
@@ -19,12 +19,12 @@ export default function CardBlogPost({ blog }: Props) {
           className="object-cover w-full object-center"
         />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 py-2 ">
         <div className="flex-1">
           <h2 className="font-normal text-2xl">
             <Link href={`/blog/${blog?.slug}`}>{blog?.title}</Link>
           </h2>
-          <p className="font-light text-sm flex items-center gap-2">
+          <p className="font-light text-sm flex items-center gap-2 text-zinc-800 dark:text-zinc-400">
             <span>Mohamad</span>
             <span>-</span>
             <span>Published</span>
